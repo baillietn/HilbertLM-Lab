@@ -253,7 +253,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         marked.setOptions({
             highlight: function (code, lang) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -268,6 +268,8 @@
         const statusEl = document.getElementById('status');
 
         const API_URL = "https://nico77310-nanollm.hf.space/chat";
+
+        let conversationHistory = [];
 
         function addMessage(role, content) {
             const messageDiv = document.createElement('div');
@@ -302,6 +304,8 @@
             addMessage('user', message);
             userInput.value = '';
 
+            conversationHistory.push({ role: "user", content: message });
+
             const responseContentDiv = addMessage('assistant', '...');
             statusEl.textContent = 'Generating...';
 
@@ -309,7 +313,7 @@
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({ messages: conversationHistory })
                 });
 
                 if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -344,7 +348,6 @@
 
                     responseContentDiv.innerHTML = parsedHtml;
                     
-                    
                     try {
                         renderMathInElement(responseContentDiv, {
                             delimiters: [
@@ -362,6 +365,8 @@
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
 
+                conversationHistory.push({ role: "assistant", content: fullText });
+
                 statusEl.textContent = 'Connected to Hugging Face Cloud ☁️';
 
             } catch (error) {
@@ -369,6 +374,8 @@
                 responseContentDiv.classList.remove('blinking-cursor');
                 responseContentDiv.textContent = 'Sorry, an error occurred.';
                 statusEl.textContent = 'Connection error.';
+                
+                conversationHistory.pop();
             }
 
             userInput.disabled = false; sendButton.disabled = false;
