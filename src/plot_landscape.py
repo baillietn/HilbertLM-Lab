@@ -13,18 +13,14 @@ device = config['device']
 dtype = torch.bfloat16
 grid_steps = 25
 morph_frames = 10
+pre_training_target_tokens = config['pre_training_target_tokens']
 
-def get_stage_from_tokens(filepath, tokens_count):
-    filename = os.path.basename(filepath).lower()
-    
-    if "final_chat_model" in filename:
-        return 5 
+def get_stage_from_tokens(tokens_count):
         
-    B = 1_000_000_000
-    if tokens_count < 8 * B: return 1
-    if tokens_count < 14 * B: return 2
-    if tokens_count < 18 * B: return 3
-    if tokens_count < 20 * B: return 4
+    if tokens_count < 0.4 * pre_training_target_tokens: return 1
+    if tokens_count < 0.7 * pre_training_target_tokens: return 2
+    if tokens_count < 0.9 * pre_training_target_tokens: return 3
+    if tokens_count < pre_training_target_tokens: return 4
     
     return 4
 
@@ -167,7 +163,7 @@ def create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages):
         ax.scatter([history_x[-1]], [history_y[-1]], [history_z[-1]], color=stage_color, s=250, marker='*', edgecolor='black')
         
         ax.set_title(title, fontsize=14, pad=20)
-        ax.set_xlabel("Fist principal direction (PCA)")
+        ax.set_xlabel("First principal direction (PCA)")
         ax.set_ylabel("Second principal direction (PCA)")
         ax.set_zlabel("Cross-Entropy Loss")
         
@@ -239,7 +235,7 @@ def main():
         tokens_list = history.get('tokens', [])
         tokens_count = tokens_list[-1] if tokens_list else 0
             
-        stage = get_stage_from_tokens(path, tokens_count)
+        stage = get_stage_from_tokens(tokens_count)
         
         if "sft_ckpt" in os.path.basename(path):
             stage = 5
@@ -284,20 +280,6 @@ def main():
     d2 = d2.to(device)
     
     surfaces = evaluate_loss_surfaces(model, theta_star, d1, d2, val_batches, ref_dict, alphas, betas)
-
-    print("Saving landscape data...")
-    save_dict = {
-        'alphas': alphas, 
-        'betas': betas, 
-        'proj_coords': np.array(proj_coords), 
-        'ckpt_stages': np.array(ckpt_stages)
-    }
-    for stage, surf in surfaces.items():
-        save_dict[f'surface_stage_{stage}'] = surf
-        
-    np.savez("landscape_data_backup.npz", **save_dict)
-    print("Landscape data was written to landscape_data_backup.npz")
-
     create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages)
 
 if __name__ == "__main__":
