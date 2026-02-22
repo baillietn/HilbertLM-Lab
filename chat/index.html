@@ -253,7 +253,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         marked.setOptions({
             highlight: function (code, lang) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
@@ -270,6 +270,11 @@
         const API_URL = "https://nico77310-nanollm.hf.space/chat";
 
         let conversationHistory = [];
+
+        let currentAbortController = null;
+        let isGenerating = false;
+        let lastUserMessageDiv = null;
+        let lastAssistantMessageDiv = null;
 
         function addMessage(role, content) {
             const messageDiv = document.createElement('div');
@@ -293,27 +298,39 @@
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            return contentDiv;
+            return { messageDiv, contentDiv };
         }
 
         async function handleSend() {
             const message = userInput.value.trim();
             if (!message) return;
 
-            userInput.disabled = true; sendButton.disabled = true;
-            addMessage('user', message);
+            isGenerating = true;
+            sendButton.textContent = 'Stop';
+            sendButton.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)'; 
+            userInput.disabled = true;
+
+            const userNodes = addMessage('user', message);
+            lastUserMessageDiv = userNodes.messageDiv;
             userInput.value = '';
 
             conversationHistory.push({ role: "user", content: message });
 
-            const responseContentDiv = addMessage('assistant', '...');
+            const assistantNodes = addMessage('assistant', '...');
+            lastAssistantMessageDiv = assistantNodes.messageDiv;
+            const responseContentDiv = assistantNodes.contentDiv;
+
             statusEl.textContent = 'Generating...';
+
+            currentAbortController = new AbortController();
 
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ messages: conversationHistory })
+                    // Sending only the 3 last messages...
+                    body: JSON.stringify({ messages: conversationHistory.slice(-3) }),
+                    signal: currentAbortController.signal
                 });
 
                 if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
@@ -333,11 +350,11 @@
                     fullText += chunk;
 
                     let mathBlocks = [];
-                    
-                    let protectedText = fullText.replace(/\$\$([\s\S]*?)\$\$/g, function(match) {
+
+                    let protectedText = fullText.replace(/\$\$([\s\S]*?)\$\$/g, function (match) {
                         let index = mathBlocks.length;
                         mathBlocks.push(match);
-                        return `MATHBLOCKPLACEHOLDER${index}END`; 
+                        return `MATHBLOCKPLACEHOLDER${index}END`;
                     });
 
                     let parsedHtml = marked.parse(protectedText);
@@ -347,43 +364,68 @@
                     });
 
                     responseContentDiv.innerHTML = parsedHtml;
-                    
+
                     try {
                         renderMathInElement(responseContentDiv, {
                             delimiters: [
-                                {left: '$$', right: '$$', display: true},
-                                {left: '$', right: '$', display: false},
-                                {left: '\\(', right: '\\)', display: false},
-                                {left: '\\[', right: '\\]', display: true}
+                                { left: '$$', right: '$$', display: true },
+                                { left: '$', right: '$', display: false },
+                                { left: '\\(', right: '\\)', display: false },
+                                { left: '\\[', right: '\\]', display: true }
                             ],
                             throwOnError: false
                         });
-                    } catch(e) {
+                    } catch (e) {
                         console.error("Erreur de rendu KaTeX :", e);
                     }
-                    
+
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
 
                 conversationHistory.push({ role: "assistant", content: fullText });
-
                 statusEl.textContent = 'Connected to Hugging Face Cloud ☁️';
 
             } catch (error) {
-                console.error('API Error:', error);
-                responseContentDiv.classList.remove('blinking-cursor');
-                responseContentDiv.textContent = 'Sorry, an error occurred.';
-                statusEl.textContent = 'Connection error.';
-                
-                conversationHistory.pop();
-            }
+                if (error.name === 'AbortError') {
+                    console.log('Chatbot response was aborted...');
 
-            userInput.disabled = false; sendButton.disabled = false;
-            userInput.focus();
+                    if (lastUserMessageDiv) lastUserMessageDiv.remove();
+                    if (lastAssistantMessageDiv) lastAssistantMessageDiv.remove();
+
+                    conversationHistory.pop();
+
+                    userInput.value = message;
+
+                    statusEl.textContent = 'Generation stopped.';
+                } else {
+                    console.error('API Error:', error);
+                    responseContentDiv.classList.remove('blinking-cursor');
+                    responseContentDiv.textContent = 'Sorry, an error occurred.';
+                    statusEl.textContent = 'Connection error.';
+                    conversationHistory.pop();
+                }
+            } finally {
+                isGenerating = false;
+                sendButton.textContent = 'Send';
+                sendButton.style.background = ''; 
+                userInput.disabled = false;
+                userInput.focus();
+                currentAbortController = null;
+            }
         }
 
-        sendButton.addEventListener('click', handleSend);
-        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
+        sendButton.addEventListener('click', () => {
+            if (isGenerating && currentAbortController) {
+                currentAbortController.abort();
+            } else {
+                handleSend();
+            }
+        });
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !isGenerating) handleSend();
+        });
+
         userInput.focus();
     </script>
 </body>
