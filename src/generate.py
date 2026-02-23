@@ -8,6 +8,16 @@ from config import config
 from prompt_toolkit import prompt
 from prompt_toolkit.key_binding import KeyBindings
 
+# Need to be adjusted
+#------------------------------------------------
+max_context = 512
+max_new_tokens = 150
+max_prompt_len = max_context - max_new_tokens
+         
+max_thresh = 12.0
+min_thresh = 1.0
+#------------------------------------------------
+
 C = config
 device = C['device']
 max_lr = C['max_lr']
@@ -78,10 +88,13 @@ def load_loaded_model(precision=None, model_ckpt=llm_chat_file_path):
     model.eval()
     return model, tokenizer
 
-def generate_streaming(model, context, tokenizer, max_new_tokens=200, temperature=0.7, top_k=50, eos_token_id=None, stop_token_id=None, repetition_penalty=1.1):
+def generate_streaming(model, context, tokenizer, max_new_tokens=200, temperature=0.7, top_k=50, eos_token_id=None, stop_token_id=None, repetition_penalty=1.1, judge=None, current_user_prompt=""):
+    generated_text = ""
+    trigger_chars = [".", "!", "?", "\n"] 
+    
     with torch.no_grad():
-        for _ in range(max_new_tokens):
-            block_size = getattr(model, 'max_len', 256)
+        for step in range(max_new_tokens):
+            block_size = getattr(model, 'max_len', 512)
             
             if context.shape[1] > block_size:
                 idx_cond = context[:, -block_size:]
@@ -108,11 +121,41 @@ def generate_streaming(model, context, tokenizer, max_new_tokens=200, temperatur
                 break
             
             token_text = tokenizer.decode([idx_next.item()])
+            generated_text += token_text
             print(token_text, end='', flush=True)
+            
+            if judge is not None:
+                in_dollar_math = generated_text.count("$") % 2 != 0
+                in_code_block = generated_text.count("```") % 2 != 0
+                
+                latex_depth = (
+                    generated_text.count("\\begin{") + generated_text.count("\\[") 
+                    - generated_text.count("\\end{") - generated_text.count("\\]")
+                )
+                
+                if in_code_block or in_dollar_math or latex_depth > 0 or generated_text.strip().endswith(":") or generated_text.strip().endswith("="):
+                    pass 
+                
+                elif step > 5 and any(char in token_text for char in trigger_chars):
+                    score = judge.predict([current_user_prompt, generated_text.strip()])
+
+                    ratio = step / max_new_tokens
+                    
+                    current_threshold = max_thresh - (ratio * (max_thresh - min_thresh))
+                    
+                    if score > current_threshold:
+                        print(f"\nDynamic stop! (Score: {score:.2f} > Threshold: {current_threshold:.2f} at step {step})", flush=True)
+                        break
+
+                if "\n" in token_text:
+                    lines = [line.strip() for line in generated_text.split('\n') if len(line.strip()) > 4]
+                    if len(lines) != len(set(lines)):
+                        print("\nStop ! Repetition was detected...", flush=True)
+                        break
 
             context = torch.cat((context, idx_next), dim=1)
 
-    return context
+    return generated_text
 
 def get_multiline_input():
     bindings = KeyBindings()
@@ -132,8 +175,14 @@ def get_multiline_input():
     except (EOFError, KeyboardInterrupt):
         return None
 
-def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False):
+def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False, use_judge=False):
     model, tokenizer = load_loaded_model(precision, model_ckpt)
+    
+    judge = None
+    if use_judge:
+        print("Loading Semantic Judge (TinyBERT)...")
+        from sentence_transformers import CrossEncoder
+        judge = CrossEncoder('cross-encoder/ms-marco-TinyBERT-L-2-v2', max_length=512, device='cpu')
     
     try:
         eos_token_id = tokenizer.encode("<|endoftext|>")[0]
@@ -143,8 +192,10 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
     print("\n" + "="*50)
     print("🤖 NanoLLM Chat")
     print("TIP: Press Enter for new lines, Alt+Enter to send.")
-    print("Type 'exit', 'quit' or 'q' to quit.")
+    print("Type 'exit', 'quit', 'clear' (to reset memory), or 'q' to quit.")
     print("="*50 + "\n")
+
+    messages = []
 
     while True:
         user_input = get_multiline_input()
@@ -152,18 +203,42 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
         if user_input is None:
             break
         
-        if user_input.strip().lower() in ["exit", "quit", "q"]:
+        user_lower = user_input.strip().lower()
+        if user_lower in ["exit", "quit", "q"]:
             break
         
+        if user_lower == "clear":
+            messages = []
+            print("History cleared.\n")
+            continue
+            
         if not user_input.strip():
             continue
 
         if base_model:
             formatted_prompt = user_input
+            current_user_prompt = user_input
+            new_user_ids = tokenizer.encode(formatted_prompt)
         else:
-            formatted_prompt = f"<|im_start|>user\n{user_input}<|im_end|>\n<|im_start|>assistant\n"
+            messages.append({"role": "user", "content": user_input})
+            current_user_prompt = user_input
+            
+            if len(messages) > 3:
+                messages = messages[-3:]
+            
+            while True:
+                formatted_prompt = ""
+                for msg in messages:
+                    formatted_prompt += f"<|im_start|>{msg['role']}\n{msg['content']}<|im_end|>\n"
+                
+                formatted_prompt += "<|im_start|>assistant\n"
+                new_user_ids = tokenizer.encode(formatted_prompt)
+                
+                if len(new_user_ids) <= max_prompt_len or len(messages) <= 1:
+                    break
+                else:
+                    messages.pop(0)
 
-        new_user_ids = tokenizer.encode(formatted_prompt)
         current_context = torch.tensor(new_user_ids, dtype=torch.long, device=device).unsqueeze(0)
         
         print("\n🤖 AI: ", end='', flush=True)
@@ -171,16 +246,21 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
         chat_stop_id = tokenizer.encode("<|im_end|>")[0] if not base_model else None
         
         full_generation = generate_streaming(
-            model, 
-            current_context,
-            tokenizer,
-            max_new_tokens=150, 
+            model=model, 
+            context=current_context,
+            tokenizer=tokenizer,
+            max_new_tokens=max_new_tokens, 
             temperature=0.2,        
             top_k=30, 
             eos_token_id=eos_token_id,
             stop_token_id=chat_stop_id if not base_model else eos_token_id,
-            repetition_penalty=1.1
+            repetition_penalty=1.1,
+            judge=judge,
+            current_user_prompt=current_user_prompt
         )
+        
+        if not base_model:
+            messages.append({"role": "assistant", "content": full_generation})
         
         print("\n")
 
@@ -208,6 +288,12 @@ if __name__ == "__main__":
         help="Use base model mode (no chat format wrapper)",
     )
     
+    parser.add_argument(
+        "--judge", 
+        action='store_true', 
+        help="Activer le juge sémantique TinyBERT pour tronquer les réponses.",
+    )
+    
     args = parser.parse_args()
     
     print("="*50)
@@ -217,6 +303,7 @@ if __name__ == "__main__":
     print(f"Device:           {device}")
     print(f"Checkpoint:       {args.ckpt}")
     print(f"Chat format:      {'BASE' if args.base else 'CHATBOT'}")
+    print(f"Semantic Judge:   {'ENABLED' if args.judge else 'DISABLED'}")
     print("="*50)
     
-    start_chat(args.precision, args.ckpt, args.base)
+    start_chat(args.precision, args.ckpt, args.base, args.judge)
