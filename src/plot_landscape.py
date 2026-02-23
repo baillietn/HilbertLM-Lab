@@ -172,7 +172,7 @@ def create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages):
 
     colors = {1: 'cyan', 2: 'yellow', 3: 'orange', 4: 'red', 5: 'lime'}
     
-    with writer.saving(fig, "curriculum_smooth_landscape.gif", dpi=120):
+    with writer.saving(fig, "figures/curriculum_smooth_landscape.gif", dpi=120):
         prev_stage = ckpt_stages[0]
         
         for idx in range(len(proj_coords)):
@@ -194,7 +194,7 @@ def create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages):
                 
             prev_stage = target_stage
 
-    print("Animation completed: curriculum_smooth_landscape.gif")
+    print("Animation completed: figures/curriculum_smooth_landscape.gif")
 
 def main():
     model = NanoLLM(

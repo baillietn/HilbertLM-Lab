@@ -117,7 +117,7 @@ if __name__ == "__main__":
                         help="Path to pretraining checkpoint")
     parser.add_argument("--sft", type=str, default="checkpoints/nano_llm_chat_final.pt",
                         help="Path to SFT checkpoint (optional)")
-    parser.add_argument("--output", type=str, default="training_report.png",
+    parser.add_argument("--output", type=str, default="figures/training_report.png",
                         help="Output file")
     parser.add_argument("--stretch", type=int, default=5,
                         help="SFT phase stretch factor (default: 5)")
