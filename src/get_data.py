@@ -280,7 +280,7 @@ def get_data():
                 line = ex['text'] + "<|endoftext|>\n"
                 f.write(line)
                 bytes_written += len(line.encode('utf-8'))
-                if bytes_written > 1.5 * 1024*1024*1024: 
+                if bytes_written > 1.5 * 1024**3: 
                     break 
 
         print("Training tokenizer...")
@@ -323,7 +323,7 @@ def get_data():
                     break
             pbar.close()
     
-    print(f"Encoding is finished ! Total : 20B tokens over 4 stages.")
+    print(f"Encoding was finished ! Total : {target_tokens/1e9:.3f}B tokens over 4 stages.")
 
 if __name__ == "__main__":
     import argparse
