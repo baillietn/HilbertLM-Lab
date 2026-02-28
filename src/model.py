@@ -87,50 +87,15 @@ class TransformerBlock(nn.Module):
         self.rope = RoPE(self.head_dim, max_len)
 
     def forward(self, x):
+        residual = x
+        
         if self.use_te:
-            return self._forward_te(x)
+            qkv = self.ln_attn(x)
         else:
-            return self._forward_native(x)
-
-    def _forward_te(self, x):
-        residual = x
-        qkv = self.ln_attn(x)
+            x_norm = self.ln1(x)
+            qkv = self.qkv_proj(x_norm)
         
         q, k, v = torch.split(qkv, [self.q_size, self.kv_size, self.kv_size], dim=2)
-        B, T, _ = q.size()
-        
-        q = q.view(B, T, self.n_head, self.head_dim)
-        k = k.view(B, T, self.n_kv_head, self.head_dim)
-        v = v.view(B, T, self.n_kv_head, self.head_dim)
-
-        k = repeat_kv(k, self.n_rep)
-        v = repeat_kv(v, self.n_rep)
-
-        q = q.transpose(1, 2)
-        k = k.transpose(1, 2)
-        v = v.transpose(1, 2)
-
-        q = self.rope(q)
-        k = self.rope(k)
-
-        y = F.scaled_dot_product_attention(q, k, v, is_causal=True)
-        y = y.transpose(1, 2).contiguous().view(B, T, self.d_model)
-        
-        x = residual + self.c_proj(y)
-
-        x = x.contiguous()
-        x = x + self.ln_mlp(x)
-        
-        return x
-
-    def _forward_native(self, x):
-        residual = x
-        x = self.ln1(x)
-        
-        qkv = self.qkv_proj(x)
-        
-        q, k, v = torch.split(qkv, [self.q_size, self.kv_size, self.kv_size], dim=2)
-
         B, T, _ = q.size()
         
         q = q.view(B, T, self.n_head, self.head_dim)
@@ -152,7 +117,11 @@ class TransformerBlock(nn.Module):
         
         x = residual + self.c_proj(attn_out)
 
-        x = x + self.mlp(self.ln2(x))
+        if self.use_te:
+            x = x.contiguous()
+            x = x + self.ln_mlp(x)
+        else:
+            x = x + self.mlp(self.ln2(x))
         
         return x
 

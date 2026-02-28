@@ -1,3 +1,4 @@
+import argparse
 import os
 import glob
 import torch
@@ -196,15 +197,24 @@ def create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages):
 
     print("Animation completed: figures/curriculum_smooth_landscape.gif")
 
-def main():
+def main(args):
+    precision = args.precision if args.precision else ("fp8" if C['use_te'] else "bf16")
+    use_te = (precision == "fp8")
+    
     model = NanoLLM(
         vocab_size=config['vocab_size'], 
         d_model=config['d_model'], 
         n_layer=config['n_layer'], 
         n_head=config['n_head'], 
         n_kv_head=config['n_kv_head'], 
-        max_len=config['block_size']
-    ).to(device, dtype=dtype)
+        max_len=config['block_size'],
+        use_te=use_te
+    )
+
+    if use_te:
+        model.to(device)
+    else:
+        model.to(device, dtype=torch.bfloat16)
     
     val_batches = load_validation_batches()
     
@@ -283,4 +293,16 @@ def main():
     create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Plot loss landscape")
+    
+    parser.add_argument(
+        "--precision", 
+        type=str, 
+        choices=["bf16", "fp8"], 
+        default="bf16",
+        help="Precision mode: bf16 (PyTorch native) or fp8 (Transformer Engine)"
+    )
+
+    args = parser.parse_args()
+
+    main(args)

@@ -18,8 +18,6 @@ torch.backends.cudnn.allow_tf32 = True
 target_tokens = config['pre_training_target_tokens']
 sft_target_tokens = config['stf_target_tokens']
 
-use_te = config['use_te']
-
 def get_lr(tokens_seen, max_lr):
     
     warmup_tokens = 0.05 * target_tokens      
@@ -134,6 +132,9 @@ def train(args):
     grad_accum_steps = batch_size // micro_batch_size 
     log_interval = C['logging_interval']
 
+    precision = args.precision if args.precision else ("fp8" if C['use_te'] else "bf16")
+    use_te = (precision == "fp8")
+
     if args.sft:
         print("SFT mode was activate")
         
@@ -175,16 +176,21 @@ def train(args):
     print(f"Mode {mode_display} : {total_tokens_in_file/1e6:.1f}M tokens -> {total_steps} steps")
 
     model = NanoLLM(
-        vocab_size=C['vocab_size'], 
+        vocab_size=vocab_size, 
         d_model=d_model, 
         n_layer=n_layer, 
         n_head=n_head, 
         max_len=block_size,
         n_kv_head=n_kv_head,
-        use_te=args.precision == "fp8" if args.precision else use_te
+        use_te=use_te
     )
     
-    model.to(device, dtype=torch.bfloat16)
+    if use_te:
+        model.to(device)
+        print(f"Model loaded on {device} (FP8 precision managed by Transformer Engine)")
+    else:
+        model.to(device, dtype=torch.bfloat16)
+        print(f"Model loaded on {device} with BF16 precision")
     
     total_params = sum(p.numel() for p in model.parameters())
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)

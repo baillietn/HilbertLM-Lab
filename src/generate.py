@@ -64,7 +64,11 @@ def load_loaded_model(precision=None, model_ckpt=llm_chat_file_path):
         n_kv_head=n_kv_head,
         use_te=use_te
     )
-    model.to(device, dtype=torch.bfloat16)
+
+    if use_te:
+        model.to(device)
+    else:
+        model.to(device, dtype=torch.bfloat16)
 
     if os.path.exists(model_ckpt):
         print(f"Checkpoint found: {model_ckpt}. Loading weights...")
