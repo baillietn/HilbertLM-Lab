@@ -385,7 +385,7 @@
                 <li><strong>Optimizer:</strong> AdamW (weight decay 0.1, fused implementation)</li>
                 <li><strong>Precision:</strong> BF16 with optional FP8 using Transformer Engine (requires NVIDIA Ada,
                     Hopper, or Blackwell GPU architectures)</li>
-                <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> enabled</li>
+                <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> and <code>F.scaled_dot_product_attention</code> enabled</li>
                 <li><strong>Training Time:</strong> ~70 hours</li>
             </ul>
         </div>
@@ -639,37 +639,7 @@
             <li>Multi-turn conversation history (last 3 messages)</li>
         </ul>
 
-        <h2>9. Technical Implementation</h2>
-
-        <h3>9.1 Code Architecture</h3>
-        <p>
-            The project is implemented in PyTorch with the following structure:
-        </p>
-        <ul>
-            <li><code>src/model.py</code>: NanoLLM architecture with GQA, RoPE, SwiGLU</li>
-            <li><code>src/train.py</code>: Training loop with gradient accumulation, checkpointing</li>
-            <li><code>src/dataset.py</code>: Memory-mapped binary datasets for efficient loading</li>
-            <li><code>src/get_data.py</code>: Dataset downloading, mixing, and tokenization</li>
-            <li><code>src/tokenizer.py</code>: BPE tokenizer wrapper</li>
-            <li><code>src/generate.py</code>: Inference with temperature sampling, top-k filtering</li>
-            <li><code>src/plot_landscape.py</code>: Loss landscape PCA visualization</li>
-            <li><code>src/plot_metrics.py</code>: Training metrics plotting</li>
-        </ul>
-
-        <h3>9.2 Training Optimizations</h3>
-        <p>
-            Several optimizations ensure efficient training:
-        </p>
-        <ul>
-            <li><strong>torch.compile:</strong> JIT compilation reduces overhead (~15% speedup)</li>
-            <li><strong>Memory-mapped datasets:</strong> Avoid loading entire dataset into RAM</li>
-            <li><strong>Gradient accumulation:</strong> Simulate large batches without OOM errors</li>
-            <li><strong>Mixed precision:</strong> BF16/FP8 reduce memory and increase throughput</li>
-            <li><strong>Fused AdamW:</strong> Kernel fusion for optimizer step</li>
-            <li><strong>Persistent workers:</strong> DataLoader workers stay alive between epochs</li>
-        </ul>
-
-        <h2>10. Conclusion</h2>
+        <h2>9. Conclusion</h2>
 
         <p>
             NanoLLM demonstrates that it's possible to train a capable language model from scratch with modest
@@ -703,7 +673,7 @@
             of large language models are accessible to individual researchers and students.
         </p>
 
-        <h2>11. References</h2>
+        <h2>10. References</h2>
 
         <ol>
             <li id="ref1">

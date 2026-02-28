@@ -221,6 +221,55 @@
             color: #764ba2;
         }
 
+            .chat-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 5px;
+    }
+
+    .home-button {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .home-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .home-button svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .chat-header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
         @keyframes blink {
 
             0%,
@@ -238,7 +287,15 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>🤖 NanoLLM</h1>
+            <div class="header-content">
+                <a href="../index.html" class="home-button" title="Back to documentation">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </a>
+                <h1>🤖 NanoLLM</h1>
+            </div>
             <div class="status" id="status">Connected to Hugging Face Cloud ☁️</div>
         </div>
 
@@ -307,7 +364,7 @@
 
             isGenerating = true;
             sendButton.textContent = 'Stop';
-            sendButton.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)'; 
+            sendButton.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)';
             userInput.disabled = true;
 
             const userNodes = addMessage('user', message);
@@ -407,7 +464,7 @@
             } finally {
                 isGenerating = false;
                 sendButton.textContent = 'Send';
-                sendButton.style.background = ''; 
+                sendButton.style.background = '';
                 userInput.disabled = false;
                 userInput.focus();
                 currentAbortController = null;
