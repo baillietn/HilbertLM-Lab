@@ -6,14 +6,6 @@ from config import config
 
 use_layernorm = config['use_layernorm']
 
-def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
-    batch, slen, n_kv_heads, head_dim = hidden_states.shape
-    if n_rep == 1:
-        return hidden_states
-    
-    hidden_states = hidden_states[:, :, :, None, :].expand(batch, slen, n_kv_heads, n_rep, head_dim)
-    return hidden_states.reshape(batch, slen, n_kv_heads * n_rep, head_dim)
-
 class RoPE(nn.Module):
     def __init__(self, head_dim, max_seq_len=2048):
         super().__init__()
@@ -102,9 +94,6 @@ class TransformerBlock(nn.Module):
         k = k.view(B, T, self.n_kv_head, self.head_dim)
         v = v.view(B, T, self.n_kv_head, self.head_dim)
 
-        k = repeat_kv(k, self.n_rep)
-        v = repeat_kv(v, self.n_rep)
-
         q = q.transpose(1, 2)
         k = k.transpose(1, 2)
         v = v.transpose(1, 2)
@@ -112,7 +101,7 @@ class TransformerBlock(nn.Module):
         q = self.rope(q)
         k = self.rope(k)
 
-        attn_out = F.scaled_dot_product_attention(q, k, v, is_causal=True)
+        attn_out = F.scaled_dot_product_attention(q, k, v, is_causal=True, enable_gqa=True)
         attn_out = attn_out.transpose(1, 2).contiguous().view(B, T, self.d_model)
         
         x = residual + self.c_proj(attn_out)
