@@ -221,54 +221,54 @@
             color: #764ba2;
         }
 
-            .chat-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-    }
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
 
-    .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 5px;
-    }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
 
-    .home-button {
-        position: absolute;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: white;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-    }
+        .home-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
 
-    .home-button:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-50%) scale(1.1);
-    }
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
 
-    .home-button svg {
-        width: 20px;
-        height: 20px;
-    }
+        .home-button svg {
+            width: 20px;
+            height: 20px;
+        }
 
-    .chat-header h1 {
-        font-size: 24px;
-        font-weight: 600;
-        margin: 0;
-    }
+        .chat-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+        }
 
         @keyframes blink {
 
@@ -280,6 +280,59 @@
             50% {
                 opacity: 0;
             }
+        }
+
+        .clear-button {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-button:hover {
+            background: rgba(255, 100, 100, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .clear-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .clear-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateY(-50%) translateX(0);
+            }
+
+            25% {
+                transform: translateY(-50%) translateX(-5px);
+            }
+
+            75% {
+                transform: translateY(-50%) translateX(5px);
+            }
+        }
+
+        .clear-button.clearing {
+            animation: shake 0.3s ease;
+            background: rgba(255, 100, 100, 0.5);
         }
     </style>
 </head>
@@ -295,6 +348,14 @@
                     </svg>
                 </a>
                 <h1>🤖 NanoLLM</h1>
+                <button class="clear-button" id="clear-button" title="Clear conversation">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </button>
             </div>
             <div class="status" id="status">Connected to Hugging Face Cloud ☁️</div>
         </div>
@@ -322,6 +383,7 @@
         const chatMessages = document.getElementById('chat-messages');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
+        const clearButton = document.getElementById('clear-button');
         const statusEl = document.getElementById('status');
 
         const API_URL = "https://nico77310-nanollm.hf.space/chat";
@@ -470,6 +532,51 @@
                 currentAbortController = null;
             }
         }
+
+        function clearConversation() {
+            conversationHistory = [];
+
+            chatMessages.innerHTML = '';
+
+            clearButton.classList.add('clearing');
+            setTimeout(() => {
+                clearButton.classList.remove('clearing');
+            }, 300);
+
+            statusEl.textContent = '🗑️ Conversation cleared';
+            setTimeout(() => {
+                statusEl.textContent = 'Connected to Hugging Face Cloud ☁️';
+            }, 2000);
+
+            console.log('Conversation history cleared');
+        }
+
+        clearButton.addEventListener('click', () => {
+            if (conversationHistory.length === 0) {
+                statusEl.textContent = 'No conversation to clear';
+                setTimeout(() => {
+                    statusEl.textContent = 'Connected to Hugging Face Cloud ☁️';
+                }, 1500);
+                return;
+            }
+
+            if (isGenerating) {
+                if (confirm('A message is being generated. Clear anyway?')) {
+                    if (currentAbortController) {
+                        currentAbortController.abort();
+                    }
+                    clearConversation();
+                }
+            } else {
+                if (conversationHistory.length > 4) {
+                    if (confirm(`Clear ${conversationHistory.length} messages?`)) {
+                        clearConversation();
+                    }
+                } else {
+                    clearConversation();
+                }
+            }
+        });
 
         sendButton.addEventListener('click', () => {
             if (isGenerating && currentAbortController) {
