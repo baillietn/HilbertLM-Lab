@@ -169,6 +169,77 @@
             padding: 20px;
             margin: 20px 0;
         }
+
+        .toc {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 25px 35px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .toc ol {
+            counter-reset: item;
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .toc li {
+            counter-increment: item;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .toc li::before {
+            content: counter(item) ". ";
+            font-weight: 600;
+            color: #764ba2;
+            margin-right: 8px;
+        }
+
+        .toc a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .toc a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .toc-note {
+            font-size: 0.85rem;
+            color: #888;
+            font-style: italic;
+            font-weight: normal;
+        }
+
+        details {
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            user-select: none;
+            margin-bottom: 15px;
+        }
+
+        details summary:hover {
+            color: #764ba2;
+        }
+
+        details[open] summary {
+            margin-bottom: 20px;
+        }
     </style>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
@@ -198,7 +269,27 @@
     </div>
 
     <div class="container">
-        <h2>1. Abstract</h2>
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">Table of Contents</h2>
+        <nav class="toc">
+            <ol>
+                <li><a href="#abstract">Abstract</a></li>
+                <li><a href="#transformer-theory">Transformer Architecture: Mathematical Foundations</a> <span
+                        class="toc-note">(optional)</span></li>
+                <li><a href="#architecture">Model Architecture Design</a></li>
+                <li><a href="#data">Data Mixture & Curriculum Learning</a></li>
+                <li><a href="#pretraining">Base Model Training</a></li>
+                <li><a href="#sft">Supervised Fine-Tuning (SFT)</a></li>
+                <li><a href="#metrics">Training Metrics & Analysis</a></li>
+                <li><a href="#landscape">Loss Landscape Visualization</a></li>
+                <li><a href="#results">Results & Capabilities</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+                <li><a href="#references">References</a></li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h2 id="abstract">1. Abstract</h2>
         <p>
             NanoLLM is a language model trained from scratch with <strong>135 million parameters</strong>.
             This project shows the complete pipeline of building a modern transformer-based language model,
@@ -220,12 +311,339 @@
             <li>Loss landscape visualization showing curriculum learning dynamics</li>
         </ul>
 
-        <h2>2. Model Architecture Design</h2>
+        <h2 id="transformer-theory">2. Transformer Architecture: Mathematical Foundations</h2>
 
-        <h3>2.1 Architecture Overview</h3>
+        <div
+            style="background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; border-radius: 4px; margin: 20px 0;">
+            <strong>⚠️ Note:</strong> This section provides a concise theoretical overview for readers interested in the
+            mathematical foundations.
+            If you're already familiar with Transformers or prefer to focus on implementation details,
+            <a href="#architecture" style="color: #667eea; font-weight: bold;">skip to Section 3: Model
+                Architecture</a>.
+        </div>
+
+        <p>
+            The Transformer architecture, introduced in "<em>Attention Is All You Need</em>"<sup><a
+                    href="#ref1">[1]</a></sup>,
+            revolutionized sequence modeling by replacing recurrent connections with self-attention mechanisms.
+            This section provides the essential mathematical framework behind NanoLLM.
+        </p>
+
+        <h3>2.1 From Text to Tokens: The Embedding Space</h3>
+        <p>
+            Language models operate on discrete tokens rather than raw text. Given a vocabulary $\mathcal{V}$ of size
+            $|V|$,
+            each token $t \in \mathcal{V}$ is mapped to a unique integer ID (encoder) using a tokenizer through this
+            canonic bijection:
+        </p>
+        <p>
+            $$\begin{aligned} \text{id} \colon \mathcal{V} &\to \llbracket 0, |V| - 1 \rrbracket \\ t &\mapsto
+            \text{id}(t) \end{aligned}$$
+        </p>
+        We will denote the inverse mapping $\text{tok} = \text{id}^{-1}$ for converting IDs back to tokens (decoder).
+        <p>
+            Each token id : $\text{id}(t) = m \in \llbracket 0, |V| - 1 \rrbracket$ is mapped to a continuous vector
+            representation:
+        </p>
+        <p>
+            $$\begin{aligned} \text{Embedding} \colon \llbracket 0, |V| - 1 \rrbracket&\to \mathbb{R}^{d_{\text{model}}}
+            \\ m &\mapsto \mathbf{x} \end{aligned}$$
+        </p>
+        <p>
+            where $d_{\text{model}}$ is the <strong>embedding dimension</strong> (576 in NanoLLM). For a sequence of
+            tokens
+            $[t_1, t_2, \ldots, t_n]$, we obtain a matrix:
+        </p>
+        <p>
+            $$\mathbf{X} = \begin{bmatrix} \mathbf{x}_1^T \\ \mathbf{x}_2^T \\ \vdots \\ \mathbf{x}_n^T \end{bmatrix}
+            \in \mathbb{R}^{n \times d_{\text{model}}}$$
+        </p>
+        <p>
+            The maximum sequence length $n$ is called the <strong>context window</strong> or <code>block_size</code>
+            (2048 tokens for NanoLLM).
+        </p>
+
+        <h3>2.2 Self-Attention: Capturing Token Relationships</h3>
+        <p>
+            Self-attention computes relationships between all tokens in parallel. For each token, we compute three
+            vectors:
+        </p>
+        <p>
+            $$
+            \begin{aligned}
+            \mathbf{Q} &= \mathbf{X} \mathbf{W}_Q \quad \text{(Queries)} \\
+            \mathbf{K} &= \mathbf{X} \mathbf{W}_K \quad \text{(Keys)} \\
+            \mathbf{V} &= \mathbf{X} \mathbf{W}_V \quad \text{(Values)}
+            \end{aligned}
+            $$
+        </p>
+        <p>
+            where $\mathbf{W}_Q, \mathbf{W}_K, \mathbf{W}_V \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ are learned
+            projection matrices.
+        </p>
+
+        <p><strong>Rotary Position Embeddings (RoPE):</strong></p>
+        <p>
+            Before computing attention scores, NanoLLM applies RoPE to encode positional information directly into 
+            the query and key vectors. Unlike absolute position embeddings, RoPE encodes positions through rotations,
+            which naturally capture relative positions in the dot product.
+        </p>
+        
+        <details>
+            <summary>Mathematical Details: Construction and Properties of RoPE <em>(Optional)</em></summary>
+            
+            <p>
+                For a vector $\mathbf{q} \in \mathbb{R}^{d_{\text{model}}}$ at position $l$, RoPE applies a rotation to each pair of consecutive dimensions.
+                The vector is split into $d_{\text{model}}/2$ pairs, and each pair $(q_{2j}, q_{2j+1})$ is rotated by an angle $\theta_j \cdot l$:
+            </p>
+            <p>
+                $$
+                \begin{bmatrix}
+                \tilde{q}_{2j} \\
+                \tilde{q}_{2j+1}
+                \end{bmatrix}
+                =
+                \begin{bmatrix}
+                \cos(l\theta_j) & -\sin(l\theta_j) \\
+                \sin(l\theta_j) & \cos(l\theta_j)
+                \end{bmatrix}
+                \begin{bmatrix}
+                q_{2j} \\
+                q_{2j+1}
+                \end{bmatrix}
+                $$
+            </p>
+            <p>
+                where the base frequency for dimension pair $j$ is defined as:
+            </p>
+            <p>
+                $$\theta_j = 10000^{-2j/d_{\text{model}}} \quad \text{for } j = 0, 1, \ldots, d_{\text{model}}/2 - 1$$
+            </p>
+            <p>
+                This choice of frequencies creates a geometric progression from high-frequency rotations (small dimensions) 
+                to low-frequency rotations (large dimensions), similar to sinusoidal position encodings but applied multiplicatively.
+            </p>
+            <p>
+                The key property of RoPE is that when computing the dot product between a query at position $l$ and a key at position $m$:
+            </p>
+            <p>
+                $$\tilde{\mathbf{q}}_l^T \tilde{\mathbf{k}}_m = \mathbf{q}^T \mathbf{R}_\theta^T(l) \mathbf{R}_\theta(m) \mathbf{k} = \mathbf{q}^T \mathbf{R}_\theta(m-l) \mathbf{k}$$
+            </p>
+            <p>
+                the result depends only on the relative distance $(m-l)$, not absolute positions. This property emerges from 
+                the rotation matrix identity: $\mathbf{R}_\theta(l)^T \mathbf{R}_\theta(m) = \mathbf{R}_\theta(m-l)$.
+            </p>
+            <p>
+                In practice, we apply this transformation to every token in the sequence. For a sequence of length $n$, 
+                each query vector at position $i \in \{1, 2, \ldots, n\}$ becomes:
+            </p>
+            <p>
+                $$\tilde{\mathbf{q}}_i = \text{RoPE}(\mathbf{q}_i, i)$$
+            </p>
+            <p>
+                where $i$ is the token's position index in the sequence. The same applies to all key vectors. For the full 
+                matrices $\mathbf{Q}$ and $\mathbf{K}$ (containing all query and key vectors stacked row-wise):
+            </p>
+            <p>
+                $$
+                \begin{aligned}
+                \tilde{\mathbf{Q}} &= [\text{RoPE}(\mathbf{q}_1, 1), \text{RoPE}(\mathbf{q}_2, 2), \ldots, \text{RoPE}(\mathbf{q}_n, n)]^T \\
+                \tilde{\mathbf{K}} &= [\text{RoPE}(\mathbf{k}_1, 1), \text{RoPE}(\mathbf{k}_2, 2), \ldots, \text{RoPE}(\mathbf{k}_n, n)]^T
+                \end{aligned}
+                $$
+            </p>
+            <p>
+                For simplicity in subsequent notation, we'll write $\mathbf{Q}$ and $\mathbf{K}$ to implicitly mean the 
+                position-encoded versions $\tilde{\mathbf{Q}}$ and $\tilde{\mathbf{K}}$.
+            </p>
+        </details>
+
+        <p>
+            Attention scores are then computed as:
+        </p>
+        <p>
+            $$\text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) =
+            \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_{\text{model}}}}\right) \mathbf{V}$$
+        </p>
+        <p>
+            The $\text{softmax}$ function is applied independently to each row of the score matrix. Let $\mathbf{S} =
+            \frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d_{\text{model}}}}$ be the $n \times n$ matrix of attention scores (where $n$ is the
+            sequence length). For each query $i$ and key $j$, the output element is defined as:
+        </p>
+        <p>
+            $$\text{softmax}(\mathbf{S})_{i,j} = \frac{e^{S_{i,j}}}{\sum_{k=1}^{n} e^{S_{i,k}}}$$
+        </p>
+        <p>
+            The scaling factor $\frac{1}{\sqrt{d_{\text{model}}}}$ prevents dot products from growing too large, ensuring stable
+            gradients. In multi-head attention, this becomes $\frac{1}{\sqrt{d_k}}$ where $d_k = d_{\text{model}}/h$.
+        </p>
+
+        <p><strong>Causal Masking:</strong></p>
+        <p>
+            For autoregressive language modeling, tokens can only attend to previous positions. This is enforced by
+            masking future positions
+            (setting attention weights to $-\infty$ before softmax):
+        </p>
+        <p>
+            $$\text{CausalAttention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) =
+            \text{softmax}\left(\frac{\mathbf{Q}\mathbf{K}^T + \mathbf{M}}{\sqrt{d_{\text{model}}}}\right) \mathbf{V}$$
+        </p>
+        <p>
+            where $\mathbf{M}_{ij} = 0$ if $i \geq j$, else $-\infty$.
+        </p>
+
+        <h3>2.3 Multi-Head Attention & Grouped Query Attention</h3>
+        <p>
+            Rather than computing attention once, we use multiple attention "heads" in parallel, each learning different
+            aspects of token relationships.
+            Standard Multi-Head Attention (MHA) with $h$ heads splits the embedding dimension:
+        </p>
+        <p>
+            $$\text{MultiHead}(\mathbf{X}) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h) \mathbf{W}_O$$
+        </p>
+        <p>
+            where each $\text{head}_i = \text{Attention}(\mathbf{Q}_i, \mathbf{K}_i, \mathbf{V}_i)$ operates on a
+            subspace of dimension $d_k = d_{\text{model}} / h$.
+        </p>
+        <p>
+            <em>Note on RoPE with Multi-Head:</em> When using multiple attention heads, RoPE is applied independently 
+            to each head's query and key projections. Since each head operates on $d_k$ dimensions, the rotation frequencies 
+            $\theta_j$ are computed using $d_k$ instead of $d_{\text{model}}$ in the formula above.
+        </p>
+
+        <p><strong>Grouped Query Attention (GQA):</strong></p>
+        <p>
+            NanoLLM uses GQA, which reduces memory by sharing key-value pairs across multiple query heads. With 9 query
+            heads and 3 KV heads:
+        </p>
+        <p>
+            This reduces the KV-cache size by during inference while maintaining model quality.
+        </p>
+
+        <h3>2.4 Feedforward Network & Layer Structure</h3>
+        <p>
+            After attention, each token representation is processed independently through a feedforward network (FFN):
+        </p>
+        <p>
+            $$\text{FFN}(\mathbf{x}) = \text{SwiGLU}(\mathbf{x} \mathbf{W}_1) \mathbf{W}_2$$
+        </p>
+        <p>
+            where SwiGLU is a gated activation function that splits the hidden dimension and applies element-wise
+            multiplication:
+        </p>
+        <p>
+            $$\text{SwiGLU}(\mathbf{x}) = \text{SiLU}(\mathbf{x}_{1:d}) \odot \mathbf{x}_{d+1:2d}$$
+        </p>
+        <p>
+            where SiLU (Sigmoid Linear Unit) is applied element-wise and is defined as:
+        </p>
+        <p>
+            $$\text{SiLU}(\mathbf{z}) = \mathbf{z} \odot \sigma(\mathbf{z}) = \frac{\mathbf{z}}{1 + e^{-\mathbf{z}}}$$
+        </p>
+        <p>
+            The complete transformer block applies attention and FFN with residual connections and normalization:
+        </p>
+        <p>
+            $$
+            \begin{cases}
+            \tilde{\mathbf{X}}^{(k+1)} &= \mathbf{X}^{(k)} + \text{Attention}(\text{LayerNorm}(\mathbf{X}^{(k)})) \\
+            \mathbf{X}^{(k+1)} &= \tilde{\mathbf{X}}^{(k+1)} + \text{FFN}(\text{LayerNorm}(\tilde{\mathbf{X}}^{(k+1)}))
+            \end{cases}
+            $$
+        </p>
+
+        <h3>2.5 From Hidden States to Probabilities</h3>
+        <p>
+            After $L$ transformer layers (30 in NanoLLM), the final hidden state is projected back to vocabulary space
+            through weights tied with the input embedding (which is a common practice to reduce parameters without
+            sacrificing performance):
+        </p>
+        <p>
+            $$\mathbf{Z} = \text{LayerNorm}(\mathbf{X}^{(L)}) \quad \Rightarrow \quad \text{logits} = \mathbf{Z}
+            \mathbf{W}_{\text{vocab}}^T \in \mathbb{R}^{n \times |V|}$$
+        </p>
+        <p>
+            Softmax converts logits to a probability distribution over the vocabulary:
+        </p>
+        <p>
+            $$(\mathbb{P}(t_{i+1} \mid t_1, \ldots, t_i))_{1 \leq i \leq n} = \text{softmax}(\text{logits})$$
+        </p>
+
+        <h3>2.6 Training Objective: Cross-Entropy Loss</h3>
+        <p>
+            The model is trained to predict the next token in a sequence. Given ground truth token $t^*$, the loss for a
+            single position is:
+        </p>
+        <p>
+            $$\mathcal{L}_{i}(\theta) = -\log \mathbb{P}(t_{i+1} = t^* \mid t_1, \ldots, t_i) = -\log
+            (\text{softmax}(\text{logits})_{i,\text{id}(t^*)})$$
+        </p>
+        <p>
+            For a full sequence of length $n$, we average losses across all positions:
+        </p>
+        <p>
+            $$\mathcal{L}_{\text{seq}}(\theta) = \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}_{i}(\theta)$$
+        </p>
+        <p>
+            This process is repeated in parallel across all sequences in the training batch, and the total loss is
+            averaged over the batch. The model parameters $\theta$ are then updated to minimize this loss using
+            gradient-based optimization.
+        </p>
+
+        <h3>2.7 Optimization: AdamW</h3>
+        <p>
+            Model parameters $\theta$ are updated using AdamW<sup><a href="#ref7">[7]</a></sup>, a variant of Adam that
+            decouples weight decay from gradient updates.
+            The update rule combines:
+        </p>
+        <ol>
+            <li><strong>Momentum:</strong> Exponential moving average of gradients ($\beta_1 = 0.9$)</li>
+            <li><strong>Adaptive learning rates:</strong> Per-parameter scaling based on gradient variance ($\beta_2 =
+                0.999$)</li>
+            <li><strong>Weight decay:</strong> L2 regularization applied directly to weights ($\lambda = 0.1$)</li>
+        </ol>
+        <p>
+            At each training step $t$:
+        </p>
+        <p>
+            $$
+            \begin{aligned}
+            \mathbf{m}_t &= \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \nabla_{\theta} \mathcal{L}_t \quad
+            \text{(momentum)} \\
+            \mathbf{v}_t &= \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) (\nabla_{\theta} \mathcal{L}_t)^2 \quad
+            \text{(variance)} \\
+            \theta_t &= \theta_{t-1} - \eta \left( \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} +
+            \lambda \theta_{t-1} \right)
+            \end{aligned}
+            $$
+        </p>
+        <p>
+            where $\hat{\mathbf{m}}_t$ and $\hat{\mathbf{v}}_t$ are bias-corrected estimates, and $\eta$ is the learning
+            rate (max 3e-3 for NanoLLM).
+        </p>
+
+        <h3>2.8 Why This Architecture Works</h3>
+        <ul>
+            <li><strong>Parallelization:</strong> Unlike RNNs, all tokens are processed simultaneously during training,
+                enabling efficient GPU utilization.</li>
+            <li><strong>Long-range dependencies:</strong> Self-attention can directly connect distant tokens, avoiding
+                the vanishing gradient problem of sequential models.</li>
+            <li><strong>Scalability:</strong> The architecture scales predictably with model size (parameters) and data
+                (tokens), following empirical laws like Chinchilla scaling<sup><a href="#ref8">[8]</a></sup>.</li>
+        </ul>
+
+        <p>
+            <strong>Further Reading:</strong> For the complete derivation and ablation studies, refer to the original
+            Transformer paper<sup><a href="#ref1">[1]</a></sup>.
+        </p>
+
+
+        <h2 id="architecture">3. Model Architecture Design</h2>
+
+        <h3>3.1 Architecture Overview</h3>
         <p>
             NanoLLM is based on a decoder-only transformer architecture with several modern enhancements.
-            The model follows a Llama-style architecture, inspired by SmolLM-135M<sup><a href="#ref1">[1]</a></sup>.
+            The model follows a Llama-style architecture, inspired by SmolLM-135M<sup><a href="#ref2">[2]</a></sup>.
         </p>
 
         <div class="architecture-box">
@@ -241,19 +659,19 @@
             </ul>
         </div>
 
-        <h3>2.2 Key Architectural Choices</h3>
+        <h3>3.2 Key Architectural Choices</h3>
 
         <p><strong>Grouped Query Attention (GQA):</strong></p>
         <p>
             Instead of Multi-Head Attention (MHA), NanoLLM uses GQA where 9 query heads share 3 key-value heads.
             This reduces KV-Cache memory usage by 3× while maintaining model quality, as demonstrated
             in "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"<sup><a
-                    href="#ref2">[2]</a></sup>.
+                    href="#ref3">[3]</a></sup>.
         </p>
 
         <p><strong>RoPE (Rotary Position Embeddings):</strong></p>
         <p>
-            Position information is encoded using RoPE<sup><a href="#ref3">[3]</a></sup>, which applies rotations to
+            Position information is encoded using RoPE<sup><a href="#ref4">[4]</a></sup>, which applies rotations to
             query and key vectors.
             This approach provides better extrapolation to longer sequences compared to absolute positional embeddings
             and integrates naturally with the attention mechanism.
@@ -261,7 +679,7 @@
 
         <p><strong>SwiGLU Activation:</strong></p>
         <p>
-            The feedforward network uses SwiGLU activation<sup><a href="#ref4">[4]</a></sup> instead of standard ReLU,
+            The feedforward network uses SwiGLU activation<sup><a href="#ref5">[5]</a></sup> instead of standard ReLU,
             improving model
             capacity with the same parameter count. The FFN hidden dimension is set to <code>8/3 × d_model</code>.
         </p>
@@ -275,15 +693,15 @@
         <p>
             <em>Note:</em> Standard LayerNorm requires computing both the mean and variance for each layer. An
             alternative
-            approach is RMSNorm<sup><a href="#ref5">[5]</a></sup>, which simplifies this by removing the mean centering
+            approach is RMSNorm<sup><a href="#ref6">[6]</a></sup>, which simplifies this by removing the mean centering
             operation and only using the root mean square. RMSNorm is computationally
             cheaper (~10-15% faster) and has been shown to achieve comparable performance in modern language models.
             Migrating to RMSNorm could be a worthwhile optimization for future iterations.
         </p>
 
-        <h2>3. Data Mixture & Curriculum Learning</h2>
+        <h2 id="data">4. Data Mixture & Curriculum Learning</h2>
 
-        <h3>3.1 Dataset Sources</h3>
+        <h3>4.1 Dataset Sources</h3>
         <p>
             The training corpus combines five diverse datasets from HuggingFace, totaling 20.1 billion tokens
             (pre-training + SFT):
@@ -296,7 +714,7 @@
             <li><strong>SmolTalk:</strong> Conversational dialogues for chat abilities</li>
         </ul>
 
-        <h3>3.2 Curriculum Learning Strategy</h3>
+        <h3>4.2 Curriculum Learning Strategy</h3>
         <p>
             Pre-training is divided into 4 progressive stages, each focusing on different capabilities.
             This curriculum approach allows the model to build foundational knowledge before tackling
@@ -361,7 +779,7 @@
             a balanced mixture emphasizing expert knowledge.
         </p>
 
-        <h3>3.3 Tokenizer Training</h3>
+        <h3>4.3 Tokenizer Training</h3>
         <p>
             A custom Byte-Pair Encoding (BPE) tokenizer with 49,152 tokens was trained on a balanced
             sample from all datasets. Special tokens include <code>&lt;|endoftext|&gt;</code>,
@@ -369,9 +787,9 @@
             and <code>&lt;|padding|&gt;</code> for sequence alignment.
         </p>
 
-        <h2>4. Base Model Training</h2>
+        <h2 id="pretraining">5. Base Model Training</h2>
 
-        <h3>4.1 Training Configuration</h3>
+        <h3>5.1 Training Configuration</h3>
         <div class="metric-card">
             <ul>
                 <li><strong>Total Tokens:</strong> 20 billion</li>
@@ -381,16 +799,18 @@
                     update. This allows training with large effective batch sizes (256 sequences ≈ 524K tokens) without
                     requiring more memory.</li>
                 <li><strong>Learning Rate:</strong> Peak 3e-3 with warmup (5%) and cosine decay<sup><a
-                            href="#ref6">[6]</a></sup></li>
+                            href="#ref7">[7]</a></sup></li>
                 <li><strong>Optimizer:</strong> AdamW (weight decay 0.1, fused implementation)</li>
                 <li><strong>Precision:</strong> BF16 with optional FP8 using Transformer Engine (requires NVIDIA Ada,
                     Hopper, or Blackwell GPU architectures)</li>
-                <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> and <code>F.scaled_dot_product_attention</code> enabled</li>
+                <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> and
+                    <code>F.scaled_dot_product_attention</code> enabled
+                </li>
                 <li><strong>Training Time:</strong> ~70 hours</li>
             </ul>
         </div>
 
-        <h3>4.2 Learning Rate Schedule</h3>
+        <h3>5.2 Learning Rate Schedule</h3>
         <p>
             The learning rate follows a three-phase schedule:
         </p>
@@ -404,17 +824,17 @@
             Chinchilla scaling laws, where compute budget is limited.
         </p>
 
-        <h3>4.3 Chinchilla Checkpointing</h3>
+        <h3>5.3 Chinchilla Checkpointing</h3>
         <p>
-            Following Chinchilla-optimal principles<sup><a href="#ref7">[7]</a></sup>, intermediate checkpoints are
+            Following Chinchilla-optimal principles<sup><a href="#ref8">[8]</a></sup>, intermediate checkpoints are
             saved every
             <code>20 × num_parameters</code> tokens (~2.7B tokens). This allows analyzing
             the model's evolution and provides fallback options if training becomes unstable.
         </p>
 
-        <h2>5. Supervised Fine-Tuning (SFT)</h2>
+        <h2 id="sft">6. Supervised Fine-Tuning (SFT)</h2>
 
-        <h3>5.1 SFT Dataset</h3>
+        <h3>6.1 SFT Dataset</h3>
         <p>
             After pretraining, the base model is fine-tuned on 100M tokens of conversational data
             with the following mixture:
@@ -424,7 +844,7 @@
             <li><strong>Web + Cosmo (25%):</strong> Instructional content</li>
         </ul>
 
-        <h3>5.2 Chat Format</h3>
+        <h3>6.2 Chat Format</h3>
         <p>
             Messages are formatted using ChatML-style markers:
         </p>
@@ -435,7 +855,7 @@
 {assistant response}&lt;|im_end|&gt;
         </code>
 
-        <h3>5.3 SFT Training Details</h3>
+        <h3>6.3 SFT Training Details</h3>
         <p>
             The SFT phase uses more conservative hyperparameters to avoid catastrophic forgetting:
         </p>
@@ -447,7 +867,7 @@
             </li>
         </ul>
 
-        <h2>6. Training Metrics & Analysis</h2>
+        <h2 id="metrics">7. Training Metrics & Analysis</h2>
 
         <div class="figure">
             <img src="figures/training_report.png" alt="Training Metrics">
@@ -458,7 +878,7 @@
             </p>
         </div>
 
-        <h3>6.1 Loss Progression</h3>
+        <h3>7.1 Loss Progression</h3>
         <p>
             The training loss curve reveals several important patterns:
         </p>
@@ -484,7 +904,7 @@
                 teaches the model to follow instructions without forgetting its pretraining knowledge.</li>
         </ul>
 
-        <h3>6.2 Learning Rate Strategy</h3>
+        <h3>7.2 Learning Rate Strategy</h3>
         <p>
             The learning rate schedule is visualized in the bottom panel:
         </p>
@@ -507,7 +927,7 @@
             during specialization phases to prevent catastrophic forgetting.
         </p>
 
-        <h3>6.3 Training Efficiency</h3>
+        <h3>7.3 Training Efficiency</h3>
         <div class="metric-card">
             <p><strong>Throughput Metrics:</strong></p>
             <ul>
@@ -518,7 +938,7 @@
             </ul>
         </div>
 
-        <h2>7. Loss Landscape Visualization</h2>
+        <h2 id="landscape">8. Loss Landscape Visualization</h2>
 
         <div class="figure">
             <img src="figures/curriculum_smooth_landscape.gif" alt="Loss Landscape Animation">
@@ -529,7 +949,7 @@
             </p>
         </div>
 
-        <h3>7.1 Visualization Methodology</h3>
+        <h3>8.1 Visualization Methodology</h3>
         <p>
             To visualize how the model evolves during training, we perform a loss landscape analysis:
         </p>
@@ -551,7 +971,7 @@
                 with training checkpoints marked as stars progressing along the trajectory.</li>
         </ol>
 
-        <h3>7.2 Key Observations</h3>
+        <h3>8.2 Key Observations</h3>
         <p>
             The loss landscape visualization reveals important training dynamics:
         </p>
@@ -589,16 +1009,16 @@
             flat basin, suggesting robust performance across diverse inputs.
         </p>
 
-        <h3>7.3 Comparison with Random Initialization</h3>
+        <h3>8.3 Comparison with Random Initialization</h3>
         <p>
             The visualization demonstrates why curriculum learning works: instead of navigating a single complex
             landscape, the model traverses progressively refined landscapes. Each stage provides a step toward the final
             objective, making optimization more tractable than training on the full mixture from scratch.
         </p>
 
-        <h2>8. Results & Capabilities</h2>
+        <h2 id="results">9. Results & Capabilities</h2>
 
-        <h3>8.1 Qualitative Performance</h3>
+        <h3>9.1 Qualitative Performance</h3>
         <p>
             The final NanoLLM model demonstrates several capabilities:
         </p>
@@ -610,7 +1030,7 @@
             <li><strong>Knowledge Retrieval:</strong> Accesses learned facts from Cosmopedia and FineWeb-Edu.</li>
         </ul>
 
-        <h3>8.2 Limitations</h3>
+        <h3>9.2 Limitations</h3>
         <p>
             As a 135M parameter model trained on 20B tokens, NanoLLM has expected limitations:
         </p>
@@ -627,7 +1047,7 @@
             requests properly and stop when appropriate.
         </p>
 
-        <h3>8.3 Interactive Demo</h3>
+        <h3>9.3 Interactive Demo</h3>
         <p>
             Try the model yourself in the <a href="chat/">interactive chat demo</a>. The interface supports:
         </p>
@@ -639,7 +1059,7 @@
             <li>Multi-turn conversation history (last 3 messages)</li>
         </ul>
 
-        <h2>9. Conclusion</h2>
+        <h2 id="conclusion">10. Conclusion</h2>
 
         <p>
             NanoLLM demonstrates that it's possible to train a capable language model from scratch with modest
@@ -647,7 +1067,7 @@
         </p>
 
         <ol>
-            <li><strong>Curriculum Learning Works:</strong> Progressive data mixing consistently outperforms
+            <li><strong>Curriculum Learning:</strong> Progressive data mixing consistently outperforms
                 training on the full mixture from the start. The loss landscape visualization confirms this empirically.
             </li>
 
@@ -660,11 +1080,11 @@
             <li><strong>Architecture Choices Matter:</strong> Modern techniques (GQA, RoPE, SwiGLU) significantly
                 improve efficiency and quality compared to vanilla transformers.</li>
 
-            <li><strong>SFT is Essential:</strong> The base model has knowledge but needs instruction-tuning to
+            <li><strong>SFT:</strong> The base model has knowledge but needs instruction-tuning to
                 become conversational. 100M SFT tokens transforms the model into a functional assistant.</li>
 
-            <li><strong>Visualization Provides Insights:</strong> Loss landscape analysis is not just aesthetic—it
-                reveals optimization dynamics that guide architecture and training decisions.</li>
+            <li><strong>Visualization Provides Insights:</strong> Loss landscape analysis reveals optimization dynamics
+                that guide architecture and training decisions.</li>
         </ol>
 
         <p>
@@ -673,10 +1093,17 @@
             of large language models are accessible to individual researchers and students.
         </p>
 
-        <h2>10. References</h2>
+        <h2 id="references">11. References</h2>
 
         <ol>
             <li id="ref1">
+                Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin,
+                I. (2017).
+                <strong>Attention Is All You Need.</strong>
+                <em>Advances in Neural Information Processing Systems 30 (NIPS 2017)</em>.
+                <a href="https://arxiv.org/abs/1706.03762" target="_blank">https://arxiv.org/abs/1706.03762</a>
+            </li>
+            <li id="ref2">
                 Ben Allal, L., Lozhkov, A., Bakouch, E., Martín Blázquez, G., Penedo, G., Tunstall, L., Marafioti, A.,
                 Kydlíček, H., Piqueres Lajarín, A., Srivastav, V., Lochner, J., Fahlgren, C., Nguyen, X.-S., Fourrier,
                 C., Burtenshaw, B., Larcher, H., Zhao, H., Zakka, C., Morlon, M., Raffel, C., von Werra, L., & Wolf, T.
@@ -685,37 +1112,37 @@
                 <em>arXiv preprint arXiv:2502.02737</em>.
                 <a href="https://arxiv.org/abs/2502.02737" target="_blank">https://arxiv.org/abs/2502.02737</a>
             </li>
-            <li id="ref2">
+            <li id="ref3">
                 Ainslie, J., Lee-Thorp, J., de Jong, M., Zemlyanskiy, Y., Lebrón, F., & Sanghai, S. (2023).
                 <strong>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints.</strong>
                 <em>arXiv preprint arXiv:2305.13245</em>.
                 <a href="https://arxiv.org/abs/2305.13245" target="_blank">https://arxiv.org/abs/2305.13245</a>
             </li>
-            <li id="ref3">
+            <li id="ref4">
                 Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., & Liu, Y. (2021).
                 <strong>RoFormer: Enhanced Transformer with Rotary Position Embedding.</strong>
                 <em>arXiv preprint arXiv:2104.09864</em>.
                 <a href="https://arxiv.org/abs/2104.09864" target="_blank">https://arxiv.org/abs/2104.09864</a>
             </li>
-            <li id="ref4">
+            <li id="ref5">
                 Shazeer, N. (2020).
                 <strong>GLU Variants Improve Transformer.</strong>
                 <em>arXiv preprint arXiv:2002.05202</em>.
                 <a href="https://arxiv.org/abs/2002.05202" target="_blank">https://arxiv.org/abs/2002.05202</a>
             </li>
-            <li id="ref5">
+            <li id="ref6">
                 Zhang, B., & Sennrich, R. (2019).
                 <strong>Root Mean Square Layer Normalization.</strong>
                 <em>Advances in Neural Information Processing Systems 32</em>.
                 <a href="https://arxiv.org/abs/1910.07467" target="_blank">https://arxiv.org/abs/1910.07467</a>
             </li>
-            <li id="ref6">
+            <li id="ref7">
                 Loshchilov, I., & Hutter, F. (2017).
                 <strong>Decoupled Weight Decay Regularization.</strong>
                 <em>International Conference on Learning Representations</em>.
                 <a href="https://arxiv.org/abs/1711.05101" target="_blank">https://arxiv.org/abs/1711.05101</a>
             </li>
-            <li id="ref7">
+            <li id="ref8">
                 Hoffmann, J., Borgeaud, S., Mensch, A., et al. (2022).
                 <strong>Training Compute-Optimal Large Language Models.</strong>
                 <em>arXiv preprint arXiv:2203.15556</em>.
