@@ -621,7 +621,7 @@
         <p>
             $$
             \begin{cases}
-            \tilde{\mathbf{X}}^{(k+1)} &= \mathbf{X}^{(k)} + \text{MultiHead}(\text{LayerNorm}(\mathbf{X}^{(k)})) \\
+            \tilde{\mathbf{X}}^{(k+1)} &= \mathbf{X}^{(k)} + \text{GQA}(\text{LayerNorm}(\mathbf{X}^{(k)})) \\
             \mathbf{X}^{(k+1)} &= \tilde{\mathbf{X}}^{(k+1)} + \text{FFN}(\text{LayerNorm}(\tilde{\mathbf{X}}^{(k+1)}))
             \end{cases}
             $$
