@@ -387,11 +387,11 @@
         We will denote the inverse mapping $\text{tok} = \text{id}^{-1}$ for converting IDs back to tokens (decoder).
         <p>
             Each token id : $\text{id}(t) = m \in \llbracket 0, |V| - 1 \rrbracket$ is mapped to a continuous vector
-            representation:
+            representation through a matrix of learnable parameters called the <strong>embedding matrix</strong> $\mathbf{W}_{\text{vocab}} \in \mathbb{R}^{|V| \times d_{\text{model}}}$:
         </p>
         <p>
             $$\begin{aligned} \text{Embedding} \colon \llbracket 0, |V| - 1 \rrbracket&\to \mathbb{R}^{d_{\text{model}}}
-            \\ m &\mapsto \mathbf{x} \end{aligned}$$
+            \\ m &\mapsto (\mathbf{W}_{\text{vocab}})_{m} \end{aligned}$$
         </p>
         <p>
             where $d_{\text{model}}$ is the <strong>embedding dimension</strong> (576 in NanoLLM). For a sequence of
@@ -610,7 +610,7 @@
             Softmax converts logits to a probability distribution over the vocabulary:
         </p>
         <p>
-            $$(\mathbb{P}(t_{i+1} \mid t_1, \ldots, t_i))_{1 \leq i \leq n} = \text{softmax}(\text{logits})$$
+            $$(\mathbb{P}(t_{i+1} \mid t_1, \ldots, t_i))_{1 \leq i \leq n} = \text{softmax}(\text{logits}) \in \mathbb{R}^{n \times |V|}$$
         </p>
 
         <h3>2.6 Training Objective: Cross-Entropy Loss</h3>
@@ -620,7 +620,7 @@
         </p>
         <p>
             $$\mathcal{L}_{i}(\theta) = -\log \mathbb{P}(t_{i+1} = t^* \mid t_1, \ldots, t_i) = -\log
-            (\text{softmax}(\text{logits})_{i,\text{id}(t^*)})$$
+            (\text{softmax}(\text{logits})_{i,\text{id}(t^*) + 1})$$
         </p>
         <p>
             For a full sequence of length $n$, we average losses across all positions:
