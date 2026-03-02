@@ -20,6 +20,7 @@ config = {
     'vocab_size': 49152,
 
     'use_layernorm': True,
+    'use_swiglu': True,
 
     # BATCHS
     'batch_size': 256,

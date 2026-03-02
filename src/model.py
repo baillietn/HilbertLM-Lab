@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from config import config
 
 use_layernorm = config['use_layernorm']
+use_swiglu = config['use_swiglu']
 
 class RoPE(nn.Module):
     def __init__(self, head_dim, max_seq_len=2048):
@@ -45,6 +46,10 @@ class TransformerBlock(nn.Module):
         self.kv_size = self.n_kv_head * self.head_dim
         total_qkv_dim = self.q_size + 2 * self.kv_size
 
+        self.rope = RoPE(self.head_dim, max_len)
+
+        ffn_hidden = int(d_model * 8/3) if use_swiglu else int(d_model * 4)
+
         if use_te:
             import transformer_engine.pytorch as te
             self.ln_attn = te.LayerNormLinear(
@@ -55,29 +60,33 @@ class TransformerBlock(nn.Module):
             ) 
             self.c_proj = te.Linear(d_model, d_model, bias=False)
             
-            ffn_hidden = int(d_model * 8/3)
             self.ln_mlp = te.LayerNormMLP(
                 hidden_size=d_model, 
                 ffn_hidden_size=ffn_hidden, 
                 bias=False, 
                 normalization="LayerNorm" if use_layernorm else "RMSNorm",
-                activation='swiglu'
+                activation='swiglu' if use_swiglu else 'gelu'
             )
         else:
             self.ln1 = nn.LayerNorm(d_model) if use_layernorm else nn.RMSNorm(d_model)
             self.qkv_proj = nn.Linear(d_model, total_qkv_dim, bias=False)
             self.c_proj = nn.Linear(d_model, d_model, bias=False)
             
-            ffn_hidden = int(d_model * 8/3)
             self.ln2 = nn.LayerNorm(d_model) if use_layernorm else nn.RMSNorm(d_model)
-            self.mlp = nn.Sequential(
-                nn.Linear(d_model, 2 * ffn_hidden, bias=False),
-                SwiGLU(),
-                nn.Linear(ffn_hidden, d_model, bias=False)
-            )
 
-        self.rope = RoPE(self.head_dim, max_len)
-
+            if use_swiglu:
+                self.mlp = nn.Sequential(
+                    nn.Linear(d_model, 2 * ffn_hidden, bias=False),
+                    SwiGLU(), 
+                    nn.Linear(ffn_hidden, d_model, bias=False)
+                )
+            else:
+                self.mlp = nn.Sequential(
+                    nn.Linear(d_model, ffn_hidden, bias=False),
+                    nn.GELU(),
+                    nn.Linear(ffn_hidden, d_model, bias=False)
+                )
+                
     def forward(self, x):
         residual = x
         
