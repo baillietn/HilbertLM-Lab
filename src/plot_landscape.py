@@ -198,7 +198,7 @@ def create_smooth_animation(alphas, betas, surfaces, proj_coords, ckpt_stages):
     print("Animation completed: figures/curriculum_smooth_landscape.gif")
 
 def main(args):
-    precision = args.precision if args.precision else ("fp8" if C['use_te'] else "bf16")
+    precision = args.precision if args.precision else ("fp8" if config['use_te'] else "bf16")
     use_te = (precision == "fp8")
     
     model = NanoLLM(

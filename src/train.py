@@ -186,7 +186,7 @@ def train(args):
     )
     
     model.to(device, dtype=torch.bfloat16)
-    print(f"Model loaded on {device}")
+    print(f"Model loaded on {device} with {precision} precision...")
     
     total_params = sum(p.numel() for p in model.parameters())
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -200,8 +200,6 @@ def train(args):
         model = torch.compile(model, mode=compile_mode if compile_mode != "default" else None)
     else:
         print("Compiled CUDA kernels was disabled")
-    
-    print(f"Model was load on {device} with {args.precision.upper()} precision...")
 
     optimizer = torch.optim.AdamW(
         model.parameters(), 
@@ -210,7 +208,7 @@ def train(args):
         fused=True
     )
 
-    if args.precision == "fp8":
+    if precision == "fp8":
         import transformer_engine.pytorch as te
         from transformer_engine.common import recipe
         fp8_recipe = recipe.DelayedScaling(
@@ -251,7 +249,7 @@ def train(args):
             history = ckpt['history']
             print(f"History : {len(history['loss'])} points.")
         
-        if args.precision == "fp8" and 'fp8_state' in ckpt:
+        if precision == "fp8" and 'fp8_state' in ckpt:
             try:
                 import transformer_engine.pytorch as te
                 fp8_state = ckpt['fp8_state']
@@ -384,7 +382,7 @@ def train(args):
             x = x.to(device, non_blocking=True).long()
             y = y.to(device, non_blocking=True).long()
 
-            if args.precision == "fp8":
+            if precision == "fp8":
                 import transformer_engine.pytorch as te
                 with te.fp8_autocast(enabled=True, fp8_recipe=fp8_recipe):
                     logits, loss = model(x, targets=y)
@@ -457,7 +455,7 @@ def train(args):
                     x = x.to(device, non_blocking=True).long()
                     y = y.to(device, non_blocking=True).long()
                     
-                    if args.precision == "fp8":
+                    if precision == "fp8":
                         import transformer_engine.pytorch as te
                         with te.fp8_autocast(enabled=True, fp8_recipe=fp8_recipe):
                             logits, loss = model(x, targets=y)
@@ -488,7 +486,7 @@ if __name__ == "__main__":
         "--precision", 
         type=str, 
         choices=["bf16", "fp8"], 
-        default="bf16",
+        default=None,
         help="Precision mode: bf16 (PyTorch native) or fp8 (Transformer Engine)"
     )
     
@@ -518,7 +516,7 @@ if __name__ == "__main__":
     print("="*50)
     print(f"Training configuration {'SFT' if args.sft else 'PRETRAIN'}")
     print("="*50)
-    print(f"Precision:        {args.precision.upper()}")
+    print(f"Precision:        {args.precision.upper() if args.precision else ('FP8' if config['use_te'] else 'BF16')}")
     print(f"Compile Mode:     {args.compile_mode}")
     print(f"Micro Batch Size: {args.micro_batch_size or config['micro_batch_size']}")
     print("="*50)
