@@ -211,10 +211,7 @@ def main(args):
         use_te=use_te
     )
 
-    if use_te:
-        model.to(device)
-    else:
-        model.to(device, dtype=torch.bfloat16)
+    model.to(device, dtype=torch.bfloat16)
     
     val_batches = load_validation_batches()
     

@@ -1,3 +1,5 @@
+from pyexpat import model
+
 import torch
 import os
 import argparse
@@ -65,10 +67,7 @@ def load_loaded_model(precision=None, model_ckpt=llm_chat_file_path):
         use_te=use_te
     )
 
-    if use_te:
-        model.to(device)
-    else:
-        model.to(device, dtype=torch.bfloat16)
+    model.to(device, dtype=torch.bfloat16)
 
     if os.path.exists(model_ckpt):
         print(f"Checkpoint found: {model_ckpt}. Loading weights...")
