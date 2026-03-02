@@ -130,7 +130,7 @@ class NanoLLM(nn.Module):
         if use_te:
             import transformer_engine.pytorch as te
             self.final_norm = te.LayerNorm(d_model) if use_layernorm else te.RMSNorm(d_model)
-            self.lm_head = nn.Linear(d_model, vocab_size, bias=False)
+            self.lm_head = te.Linear(d_model, vocab_size, bias=False)
             
         else:
             self.final_norm = nn.LayerNorm(d_model) if use_layernorm else nn.RMSNorm(d_model)
@@ -162,7 +162,13 @@ class NanoLLM(nn.Module):
             x = layer(x)
         
         x = self.final_norm(x)
-        logits = self.lm_head(x)
+
+        if self.use_te:
+            import transformer_engine.pytorch as te
+            with te.fp8_autocast(enabled=False):
+                logits = self.lm_head(x)
+        else:
+            logits = self.lm_head(x)
 
         if targets is not None:
             loss = F.cross_entropy(

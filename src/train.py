@@ -185,12 +185,8 @@ def train(args):
         use_te=use_te
     )
     
-    if use_te:
-        model.to(device)
-        print(f"Model loaded on {device} (FP8 precision managed by Transformer Engine)")
-    else:
-        model.to(device, dtype=torch.bfloat16)
-        print(f"Model loaded on {device} with BF16 precision")
+    model.to(device, dtype=torch.bfloat16)
+    print(f"Model loaded on {device}")
     
     total_params = sum(p.numel() for p in model.parameters())
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -218,9 +214,11 @@ def train(args):
         import transformer_engine.pytorch as te
         from transformer_engine.common import recipe
         fp8_recipe = recipe.DelayedScaling(
-            margin=0, 
-            interval=1, 
-            fp8_format=recipe.Format.E4M3
+            margin=0.0, 
+            interval=16, 
+            fp8_format=recipe.Format.HYBRID,
+            amax_history_len=32,
+            amax_compute_algo="max",
         )
         print("FP8 Autocast was enabled")
     else:
