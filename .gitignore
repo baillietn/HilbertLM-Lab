@@ -2,6 +2,9 @@ checkpoints/*.pt
 checkpoints/samples/*.pt
 data/raw/*
 
+checkpoints_bf16/
+checkpoints_fp8/
+
 .venv/*
 
 src/__pycache__

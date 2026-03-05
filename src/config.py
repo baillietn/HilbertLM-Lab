@@ -19,7 +19,7 @@ config = {
     'n_kv_head': 3,
     'vocab_size': 49152,
 
-    'use_layernorm': True,
+    'use_layernorm': False,
     'use_swiglu': True,
 
     # BATCHS
@@ -36,7 +36,7 @@ config = {
     'device': 'cuda' if torch.cuda.is_available() else 'cpu',
 
     # FP8 PRECISON (USING TRANSFORMER ENGINE FROM NVIDIA)
-    'use_te': False ,
+    'use_te': True,
 
     # CURRICULUM LEARNING RATIOS
     'stage_ratios': {
