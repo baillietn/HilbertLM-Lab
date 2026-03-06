@@ -107,6 +107,7 @@ def main(args):
         block_size=config['block_size'],
         use_layernorm=use_layernorm,
         use_swiglu=use_swiglu,
+        torch_dtype="bfloat16",
     )
     
     model = HilbertLMForCausalLM(hf_config)
@@ -123,6 +124,8 @@ def main(args):
     
     if tie_weights:
         model.model.lm_head.weight = torch.nn.Parameter(model.model.token_embedding.weight.clone())
+
+    model = model.to(torch.bfloat16)
     
     model.save_pretrained(output_dir, safe_serialization=True)
     
