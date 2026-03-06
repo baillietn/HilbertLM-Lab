@@ -4,7 +4,7 @@ import torch
 import os
 import argparse
 import sys
-from model import NanoLLM
+from model import HilbertLM
 from tokenizer import SimpleTokenizer
 from config import config
 from prompt_toolkit import prompt
@@ -30,7 +30,7 @@ n_head = C['n_head']
 n_kv_head = C['n_kv_head']
 batch_size = C['batch_size']
 tokenizer_path = C['tokenizer_path'] + "/tokenizer.json"
-llm_chat_file_path = "checkpoints/nano_llm_chat_final.pt"
+llm_chat_file_path = "checkpoints/hilbert_chat_model.pt"
 
 def apply_repetition_penalty(logits, sequences, penalty, window=50):
     for i in range(logits.shape[0]):
@@ -57,7 +57,7 @@ def load_loaded_model(precision=None, model_ckpt=llm_chat_file_path):
     
     precision_display = precision.upper() if precision else f"CONFIG (use_te={use_te})"
     print(f"Building model (precision={precision_display})...")
-    model = NanoLLM(
+    model = HilbertLM(
         vocab_size=C['vocab_size'], 
         d_model=d_model, 
         n_layer=n_layer, 
@@ -193,7 +193,7 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
         eos_token_id = None
 
     print("\n" + "="*50)
-    print("🤖 NanoLLM Chat")
+    print("🤖 HilbertLM Chat")
     print("TIP: Press Enter for new lines, Alt+Enter to send.")
     print("Type 'exit', 'quit', 'clear' (to reset memory), or 'q' to quit.")
     print("="*50 + "\n")
@@ -268,7 +268,7 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
         print("\n")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate text with NanoLLM")
+    parser = argparse.ArgumentParser(description="Generate text with HilbertLM")
     
     parser.add_argument(
         "--precision", 

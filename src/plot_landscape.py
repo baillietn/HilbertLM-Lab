@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import PillowWriter
 from tqdm import tqdm
 
-from model import NanoLLM
+from model import HilbertLM
 from config import config
 
 device = config['device']
@@ -201,7 +201,7 @@ def main(args):
     precision = args.precision if args.precision else ("fp8" if config['use_te'] else "bf16")
     use_te = (precision == "fp8")
     
-    model = NanoLLM(
+    model = HilbertLM(
         vocab_size=config['vocab_size'], 
         d_model=config['d_model'], 
         n_layer=config['n_layer'], 

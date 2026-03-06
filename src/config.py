@@ -19,7 +19,7 @@ config = {
     'n_kv_head': 3,
     'vocab_size': 49152,
 
-    'use_layernorm': False,
+    'use_layernorm': True,
     'use_swiglu': True,
 
     # BATCHS

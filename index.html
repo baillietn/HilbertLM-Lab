@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NanoLLM - Project Report</title>
+    <title>HilbertLM - Project Report</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -302,13 +302,13 @@
 <body>
 
     <div class="hero">
-        <a href="https://github.com/Nico77310/NanoLLM" target="_blank" class="github-link">
+        <a href="https://github.com/Nico77310/HilbertLM" target="_blank" class="github-link">
             <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
             </svg>
         </a>
-        <h1>🤖 NanoLLM Project</h1>
+        <h1>🤖 HilbertLM Project</h1>
         <p>Training a 135M parameter language model from scratch</p>
 
         <a href="chat/" class="btn-demo">Try Demo</a>
@@ -337,7 +337,7 @@
     <div class="container">
         <h2 id="abstract">1. Abstract</h2>
         <p>
-            NanoLLM is a language model trained from scratch with <strong>135 million parameters</strong>.
+            HilbertLM is a language model trained from scratch with <strong>135 million parameters</strong>.
             This project shows the complete pipeline of building a modern transformer-based language model,
             from architecture design to supervised fine-tuning (SFT). The model is trained on <strong>20 billion
                 tokens</strong> using
@@ -372,7 +372,7 @@
             The Transformer architecture, introduced in "<em>Attention Is All You Need</em>"<sup><a
                     href="#ref1">[1]</a></sup>,
             revolutionized sequence modeling by replacing recurrent connections with self-attention mechanisms.
-            This section provides the essential mathematical framework behind NanoLLM.
+            This section provides the essential mathematical framework behind HilbertLM.
         </p>
 
         <h3>2.1 From Text to Tokens: The Embedding Space</h3>
@@ -397,7 +397,7 @@
             \\ m &\mapsto (\mathbf{W}_{\text{vocab}})_{m+1} \end{aligned}$$
         </p>
         <p>
-            where $d_{\text{model}}$ is the <strong>embedding dimension</strong> (576 in NanoLLM). For a sequence of
+            where $d_{\text{model}}$ is the <strong>embedding dimension</strong> (576 in HilbertLM). For a sequence of
             tokens
             $[t_1, t_2, \ldots, t_n]$, we obtain a matrix:
         </p>
@@ -407,7 +407,7 @@
         </p>
         <p>
             The maximum sequence length $n$ is called the <strong>context window</strong> or <code>block_size</code>
-            (2048 tokens for NanoLLM).
+            (2048 tokens for HilbertLM).
         </p>
 
         <h3>2.2 Self-Attention: Capturing Token Relationships</h3>
@@ -432,7 +432,7 @@
 
         <p><strong>Rotary Position Embeddings (RoPE):</strong></p>
         <p>
-            Before computing attention scores, NanoLLM applies RoPE to encode positional information directly into
+            Before computing attention scores, HilbertLM applies RoPE to encode positional information directly into
             the query and key vectors. Unlike absolute position embeddings, RoPE encodes positions through rotations,
             which naturally capture relative positions in the dot product.
         </p>
@@ -578,7 +578,7 @@
 
         <p><strong>Grouped Query Attention (GQA):</strong></p>
         <p>
-            NanoLLM uses GQA, which reduces memory by sharing key-value pairs across multiple query heads. With 9 query
+            HilbertLM uses GQA, which reduces memory by sharing key-value pairs across multiple query heads. With 9 query
             heads and 3 KV heads:
         </p>
         <p>
@@ -629,7 +629,7 @@
 
         <h3>2.5 From Hidden States to Probabilities</h3>
         <p>
-            After $L$ transformer layers (30 in NanoLLM), the final hidden state is projected back to vocabulary space
+            After $L$ transformer layers (30 in HilbertLM), the final hidden state is projected back to vocabulary space
             through weights tied with the input embedding (which is a common practice to reduce parameters without
             sacrificing performance):
         </p>
@@ -695,7 +695,7 @@
         </p>
         <p>
             where $\hat{\mathbf{m}}_t$ and $\hat{\mathbf{v}}_t$ are bias-corrected estimates, and $\eta$ is the learning
-            rate (max 3e-3 for NanoLLM).
+            rate (max 3e-3 for HilbertLM).
         </p>
 
         <h3>2.8 Why This Architecture Works</h3>
@@ -718,12 +718,12 @@
 
         <h3>3.1 Architecture Overview</h3>
         <p>
-            NanoLLM is based on a decoder-only transformer architecture with several modern enhancements.
+            HilbertLM is based on a decoder-only transformer architecture with several modern enhancements.
             The model follows a Llama-style architecture, inspired by SmolLM-135M<sup><a href="#ref2">[2]</a></sup>.
         </p>
 
         <div class="architecture-box">
-            <strong>NanoLLM Configuration:</strong>
+            <strong>HilbertLM Configuration:</strong>
             <ul style="margin-top: 10px;">
                 <li><code>vocab_size</code>: 49,152 tokens</li>
                 <li><code>block_size</code>: 2,048 context length</li>
@@ -739,7 +739,7 @@
 
         <p><strong>Grouped Query Attention (GQA):</strong></p>
         <p>
-            Instead of Multi-Head Attention (MHA), NanoLLM uses GQA where 9 query heads share 3 key-value heads.
+            Instead of Multi-Head Attention (MHA), HilbertLM uses GQA where 9 query heads share 3 key-value heads.
             This reduces KV-Cache memory usage by 3× while maintaining model quality, as demonstrated
             in "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"<sup><a
                     href="#ref3">[3]</a></sup>.
@@ -998,7 +998,7 @@
             reduction following training divergence: maintaining 3e-3 when introducing mathematical content (Stage 3)
             caused instability, as the aggressive learning rate erased previously learned web and Cosmopedia knowledge.
             The second discontinuity stems from adjusting the cosine decay target from 3e-4 to 3e-5 before SFT. Small
-            models like NanoLLM benefit from higher learning rates for broad exploration but require significant
+            models like HilbertLM benefit from higher learning rates for broad exploration but require significant
             reduction
             during specialization phases to prevent catastrophic forgetting.
         </p>
@@ -1096,7 +1096,7 @@
 
         <h3>9.1 Qualitative Performance</h3>
         <p>
-            The final NanoLLM model demonstrates several capabilities:
+            The final HilbertLM model demonstrates several capabilities:
         </p>
         <ul>
             <li><strong>Code Generation:</strong> Can write simple Python functions with correct syntax.</li>
@@ -1108,7 +1108,7 @@
 
         <h3>9.2 Limitations</h3>
         <p>
-            As a 135M parameter model trained on 20B tokens, NanoLLM has expected limitations:
+            As a 135M parameter model trained on 20B tokens, HilbertLM has expected limitations:
         </p>
         <ul>
             <li>Limited factual knowledge compared to larger models.</li>
@@ -1138,7 +1138,7 @@
         <h2 id="conclusion">10. Conclusion</h2>
 
         <p>
-            NanoLLM demonstrates that it's possible to train a capable language model from scratch with modest
+            HilbertLM demonstrates that it's possible to train a capable language model from scratch with modest
             resources (single GPU, ~70 hours). The key insights from this project are:
         </p>
 
@@ -1227,11 +1227,11 @@
         </ol>
 
         <div style="text-align: center; margin: 60px 0 40px 0;">
-            <a href="chat/" class="btn-demo">Try NanoLLM Now</a>
+            <a href="chat/" class="btn-demo">Try HilbertLM Now</a>
         </div>
 
         <div style="text-align: center; color: #666; padding: 20px; border-top: 1px solid #eee; margin-top: 40px;">
-            <p>NanoLLM Project - Demonstrating modern language model training from scratch</p>
+            <p>HilbertLM Project - Demonstrating modern language model training from scratch</p>
             <p style="font-size: 0.9rem;">Built with PyTorch and HuggingFace Datasets</p>
         </div>
     </div>

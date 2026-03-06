@@ -7,7 +7,7 @@ import time
 import math
 import gc
 from torch.utils.data import DataLoader, Subset
-from model import NanoLLM
+from model import HilbertLM
 from dataset import TextDataset, SFTDataset
 from config import config
 
@@ -157,15 +157,15 @@ def train(args):
         
         sft_max_lr = 1.5e-4
         checkpoint_path = "checkpoints/sft_checkpoint.pt"
-        base_model_path = "checkpoints/final_base_model.pt"
-        final_model_path = "checkpoints/nano_llm_chat_final.pt"
+        base_model_path = "checkpoints/hilbert_base_model.pt"
+        final_model_path = "checkpoints/hilbert_chat_model.pt"
         is_sft_mode = True
         
     else:
         train_dataset = TextDataset(C['dataset_path'], block_size=block_size)
         checkpoint_path = C['checkpoint_file_path']
         base_model_path = None
-        final_model_path = "checkpoints/final_base_model.pt"
+        final_model_path = "checkpoints/hilbert_base_model.pt"
         is_sft_mode = False
 
     total_tokens_in_file = len(train_dataset.data) if hasattr(train_dataset, 'data') else len(train_dataset) * block_size
@@ -175,7 +175,7 @@ def train(args):
     mode_display = "SFT" if is_sft_mode else "PRETRAIN"
     print(f"Mode {mode_display} : {total_tokens_in_file/1e6:.1f}M tokens -> {total_steps} steps")
 
-    model = NanoLLM(
+    model = HilbertLM(
         vocab_size=vocab_size, 
         d_model=d_model, 
         n_layer=n_layer, 
@@ -480,7 +480,7 @@ def train(args):
         return
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train NanoLLM")
+    parser = argparse.ArgumentParser(description="Train HilbertLM")
     
     parser.add_argument(
         "--precision", 

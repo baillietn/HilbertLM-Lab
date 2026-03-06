@@ -1,12 +1,12 @@
-# 🤖 NanoLLM
+# 🤖 HilbertLM
 
 A **135M parameter language model** trained from scratch with PyTorch on 20 billion tokens
 
 ---
 
-## What is NanoLLM?
+## What is HilbertLM?
 
-NanoLLM is a complete educational project demonstrating how to build a modern transformer-based language model from scratch, including:
+HilbertLM is a complete educational project demonstrating how to build a modern transformer-based language model from scratch, including:
 
 - Custom BPE tokenizer (49,152 vocab)
 - Modern architecture (GQA, RoPE, SwiGLU)
@@ -15,8 +15,8 @@ NanoLLM is a complete educational project demonstrating how to build a modern tr
 - Loss landscape visualization
 - Interactive web demo
 
-**Home Page:** [NanoLLM](https://nico77310.github.io/NanoLLM/)
-**Chat Page:** [NanoLLM Chat](https://nico77310.github.io/NanoLLM/chat/)
+**Home Page:** [HilbertLM](https://nico77310.github.io/HilbertLM/)
+**Chat Page:** [HilbertLM Chat](https://nico77310.github.io/HilbertLM/chat/)
 
 ---
 
@@ -31,8 +31,8 @@ NanoLLM is a complete educational project demonstrating how to build a modern tr
 
 ```bash
 # Clone the repository
-git clone https://github.com/Nico77310/NanoLLM.git
-cd NanoLLM
+git clone https://github.com/Nico77310/HilbertLM.git
+cd HilbertLM
 
 # Install PyTorch (adjust for your CUDA version)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -77,27 +77,27 @@ python src/train.py --precision bf16 --checkpoint checkpoints/checkpoint.pt
 
 ```bash
 # Fine-tune on conversational data (100M tokens)
-python src/train.py --sft --precision bf16 --checkpoint checkpoints/final_base_model.pt
+python src/train.py --sft --precision bf16 --checkpoint checkpoints/hilbert_base_model.pt
 ```
 
 ### 4. Generate Text
 
 ```bash
 # Interactive chat
-python src/generate.py --ckpt checkpoints/nano_llm_chat_final.pt
+python src/generate.py --ckpt checkpoints/hilbert_chat_model.pt
 
 # Base model (no chat formatting)
-python src/generate.py --ckpt checkpoints/final_base_model.pt --base
+python src/generate.py --ckpt checkpoints/hilbert_base_model.pt --base
 ```
 
 ### 5. Visualize Training
 
 ```bash
 # Plot training metrics
-python src/plot_metrics.py --pretrain checkpoints/final_base_model.pt --sft checkpoints/nano_llm_chat_final.pt
+python src/plot_metrics.py --pretrain checkpoints/hilbert_base_model.pt --sft checkpoints/hilbert_chat_model.pt
 
 # Generate loss landscape animation (requires validation batches)
-python src/plot_landscape.py --checkpoint checkpoints/final_base_model.pt
+python src/plot_landscape.py --checkpoint checkpoints/hilbert_base_model.pt
 ```
 
 ---
@@ -131,7 +131,7 @@ python src/train.py --micro-batch-size 4    # Effective batch = batch_size / mic
 
 ## Documentation
 
-- **Technical Report:** [NanoLLM](https://nico77310.github.io/NanoLLM/) — Complete architecture, training methodology, loss landscape analysis
+- **Technical Report:** [HilbertLM](https://nico77310.github.io/HilbertLM/) — Complete architecture, training methodology, loss landscape analysis
 - **Config File:** [`src/config.py`](src/config.py) — Adjust hyperparameters here
 
 

@@ -8,3 +8,6 @@ checkpoints_fp8/
 .venv/*
 
 src/__pycache__
+src/convert_to_hf/__pycache__
+
+hf_export_model/

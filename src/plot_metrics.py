@@ -113,9 +113,9 @@ def plot_training(pretrain_ckpt, sft_ckpt=None, output_file="training_report.png
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--pretrain", type=str, default="checkpoints/final_base_model.pt", 
+    parser.add_argument("--pretrain", type=str, default="checkpoints/hilbert_base_model.pt", 
                         help="Path to pretraining checkpoint")
-    parser.add_argument("--sft", type=str, default="checkpoints/nano_llm_chat_final.pt",
+    parser.add_argument("--sft", type=str, default="checkpoints/hilbert_chat_model.pt",
                         help="Path to SFT checkpoint (optional)")
     parser.add_argument("--output", type=str, default="figures/training_report.png",
                         help="Output file")

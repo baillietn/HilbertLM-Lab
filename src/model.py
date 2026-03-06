@@ -123,7 +123,7 @@ class TransformerBlock(nn.Module):
         
         return x
 
-class NanoLLM(nn.Module):
+class HilbertLM(nn.Module):
     def __init__(self, vocab_size, d_model, n_layer, n_head, max_len, use_te=False, n_kv_head=None):
         super().__init__()
         self.max_len = max_len
