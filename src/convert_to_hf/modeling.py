@@ -152,12 +152,11 @@ class HilbertLM(nn.Module):
 
 class HilbertLMForCausalLM(PreTrainedModel, GenerationMixin):
     config_class = HilbertLMConfig
-    _tied_weights_keys = [] 
+    _keys_to_ignore_on_load_missing = ["model.lm_head.weight"]
 
     def __init__(self, config):
         super().__init__(config)
-        self.config = config
-        self.all_tied_weights_keys = {} 
+        self.config = config 
         
         self.model = HilbertLM(
             vocab_size=config.vocab_size,
@@ -169,6 +168,27 @@ class HilbertLMForCausalLM(PreTrainedModel, GenerationMixin):
             use_layernorm=config.use_layernorm,
             use_swiglu=config.use_swiglu
         )
+        
+        if config.tie_word_embeddings:
+            self.all_tied_weights_keys = {"model.token_embedding.weight": "model.lm_head.weight"}
+        else:
+            self.all_tied_weights_keys = {}
+    
+    def tie_weights(self, missing_keys=None, recompute_mapping=True):
+        if self.config.tie_word_embeddings:
+            self.model.lm_head.weight = self.model.token_embedding.weight
+    
+    def get_input_embeddings(self):
+        return self.model.token_embedding
+    
+    def set_input_embeddings(self, value):
+        self.model.token_embedding = value
+    
+    def get_output_embeddings(self):
+        return self.model.lm_head
+    
+    def set_output_embeddings(self, new_embeddings):
+        self.model.lm_head = new_embeddings
 
     def forward(self, input_ids, attention_mask=None, labels=None, **kwargs):
         logits = self.model(input_ids)
