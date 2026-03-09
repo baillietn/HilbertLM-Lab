@@ -15,9 +15,13 @@ from prompt_toolkit.key_binding import KeyBindings
 max_context = 512
 max_new_tokens = 150
 max_prompt_len = max_context - max_new_tokens
-         
+
 max_thresh = 12.0
 min_thresh = 1.0
+
+temperature = 0.2
+top_k = 30
+repetition_penalty = 1.1
 #------------------------------------------------
 
 C = config
@@ -185,7 +189,7 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
     if use_judge:
         print("Loading Semantic Judge (TinyBERT)...")
         from sentence_transformers import CrossEncoder
-        judge = CrossEncoder('cross-encoder/ms-marco-TinyBERT-L-2-v2', max_length=512, device='cpu')
+        judge = CrossEncoder('cross-encoder/ms-marco-TinyBERT-L-2-v2', max_length=max_context, device='cpu')
     
     try:
         eos_token_id = tokenizer.encode("<|endoftext|>")[0]
@@ -253,11 +257,11 @@ def start_chat(precision="bf16", model_ckpt=llm_chat_file_path, base_model=False
             context=current_context,
             tokenizer=tokenizer,
             max_new_tokens=max_new_tokens, 
-            temperature=0.2,        
-            top_k=30, 
+            temperature=temperature,        
+            top_k=top_k, 
             eos_token_id=eos_token_id,
             stop_token_id=chat_stop_id if not base_model else eos_token_id,
-            repetition_penalty=1.1,
+            repetition_penalty=repetition_penalty,
             judge=judge,
             current_user_prompt=current_user_prompt
         )

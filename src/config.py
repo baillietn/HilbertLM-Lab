@@ -36,7 +36,7 @@ config = {
     'device': 'cuda' if torch.cuda.is_available() else 'cpu',
 
     # FP8 PRECISON (USING TRANSFORMER ENGINE FROM NVIDIA)
-    'use_te': True,
+    'use_te': False,
 
     # CURRICULUM LEARNING RATIOS
     'stage_ratios': {
