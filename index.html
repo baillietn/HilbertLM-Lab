@@ -4,19 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>HilbertLM - Project Report</title>
     <style>
+        :root {
+            --page-text: #333;
+            --page-bg: #f8f9fa;
+            --surface-bg: #ffffff;
+            --surface-muted: #f8f9fa;
+            --feature-card-bg: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            --note-bg: #fff3cd;
+            --note-text: #4a3a00;
+            --note-border: #ffc107;
+            --border-soft: #e0e0e0;
+            --border-table: #ddd;
+            --hover-row: #f5f5f5;
+            --inline-code-bg: #f4f4f4;
+            --caption-text: #666;
+            --toc-link: #333;
+            --toc-note: #888;
+            --highlight-bg: #fff3cd;
+            --highlight-text: #333;
+            --terminal-bg: #f5f5f5;
+            --terminal-text: #333333;
+            --code-bg: #f5f5f5;
+            --code-text: #000000;
+            --code-border: #e1e4e8;
+            --kw: #0000ff;
+            --fn: #795e26;
+            --str: #a31515;
+            --comment: #008000;
+            --var: #001080;
+            --num: #098658;
+            --op: #000000;
+            --link-accent: #667eea;
+            --tip-bg: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            --hero-gradient: linear-gradient(135deg, #4158a8 0%, #51357a 100%);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
+            color: var(--page-text);
+            background-color: var(--page-bg);
             margin: 0;
             padding: 0;
         }
 
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--hero-gradient);
             color: white;
             padding: 60px 20px;
             text-align: center;
@@ -90,14 +126,14 @@
             max-width: 900px;
             margin: 40px auto;
             padding: 20px;
-            background: white;
+            background: var(--surface-bg);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         h2 {
             color: #764ba2;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid var(--border-soft);
             padding-bottom: 10px;
             margin-top: 40px;
             margin-bottom: 20px;
@@ -119,11 +155,91 @@
         }
 
         .architecture-box {
-            background: #f8f9fa;
+            background: var(--surface-muted);
             border-left: 4px solid #667eea;
             padding: 15px;
             margin: 20px 0;
             border-radius: 4px;
+        }
+
+        .feature-card {
+            background: var(--feature-card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card.last {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 30px;
+        }
+
+        .section-title.compact {
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            margin-top: 0;
+            color: #764ba2;
+        }
+
+        .list-tight-left {
+            margin-left: 20px;
+        }
+
+        .list-spacious {
+            line-height: 1.8;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .link-accent {
+            color: var(--link-accent);
+            font-weight: bold;
+        }
+
+        .tip-box {
+            background: var(--tip-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .tip-box p {
+            margin: 0;
+        }
+
+        .note-box {
+            background: var(--note-bg);
+            color: var(--note-text);
+            padding: 15px;
+            border-left: 4px solid var(--note-border);
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .page-footer-cta {
+            text-align: center;
+            margin: 60px 0 40px 0;
+        }
+
+        .page-footer {
+            text-align: center;
+            color: var(--caption-text);
+            padding: 20px;
+            border-top: 1px solid var(--border-soft);
+            margin-top: 40px;
+        }
+
+        .page-footer small {
+            font-size: 0.9rem;
         }
 
         .figure {
@@ -140,7 +256,7 @@
 
         .figure-caption {
             font-style: italic;
-            color: #666;
+            color: var(--caption-text);
             margin-top: 10px;
             font-size: 0.95rem;
         }
@@ -155,7 +271,7 @@
         td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid var(--border-table);
         }
 
         th {
@@ -165,31 +281,42 @@
         }
 
         tr:hover {
-            background-color: #f5f5f5;
+            background-color: var(--hover-row);
         }
 
         .highlight {
-            background-color: #fff3cd;
+            background-color: var(--highlight-bg);
+            color: var(--highlight-text);
             padding: 2px 6px;
             border-radius: 3px;
         }
 
         code {
-            background-color: #f4f4f4;
+            background-color: var(--inline-code-bg);
             padding: 2px 6px;
             border-radius: 3px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
         }
 
+        .chatml-block {
+            display: block;
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid var(--code-border);
+        }
+
         /* Syntax highlighting - VS Code Light theme colors */
         .code-block {
-            background: #f5f5f5;
-            color: #000000;
+            background: var(--code-bg);
+            color: var(--code-text);
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border: 1px solid #e1e4e8;
+            border: 1px solid var(--code-border);
             border-left: 4px solid #667eea;
             overflow-x: auto;
         }
@@ -208,44 +335,44 @@
         }
 
         .code-keyword {
-            color: #0000FF;
+            color: var(--kw);
             font-weight: 600;
         }
 
         /* import, from, def, class, with, etc. */
         .code-function {
-            color: #795E26;
+            color: var(--fn);
         }
 
         /* function names */
         .code-string {
-            color: #A31515;
+            color: var(--str);
         }
 
         /* strings */
         .code-comment {
-            color: #008000;
+            color: var(--comment);
             font-style: italic;
         }
 
         /* comments */
         .code-variable {
-            color: #001080;
+            color: var(--var);
         }
 
         /* variables, parameters */
         .code-number {
-            color: #098658;
+            color: var(--num);
         }
 
         /* numbers */
         .code-operator {
-            color: #000000;
+            color: var(--op);
         }
 
         /* =, +, -, etc. */
         .code-builtin {
-            color: #0000FF;
+            color: var(--kw);
             font-weight: 600;
         }
 
@@ -253,12 +380,12 @@
 
         /* Terminal/Shell styling */
         .terminal-block {
-            background: #f5f5f5;
-            color: #333333;
+            background: var(--terminal-bg);
+            color: var(--terminal-text);
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border: 1px solid #e1e4e8;
+            border: 1px solid var(--code-border);
             border-left: 4px solid #667eea;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 0.95em;
@@ -301,8 +428,8 @@
             max-width: 700px;
             margin: 30px auto;
             padding: 25px 35px;
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
+            background: var(--surface-muted);
+            border: 1px solid var(--border-soft);
             border-radius: 4px;
         }
 
@@ -327,7 +454,7 @@
         }
 
         .toc a {
-            color: #333;
+            color: var(--toc-link);
             text-decoration: none;
             transition: color 0.2s ease;
         }
@@ -339,13 +466,13 @@
 
         .toc-note {
             font-size: 0.85rem;
-            color: #888;
+            color: var(--toc-note);
             font-style: italic;
             font-weight: normal;
         }
 
         details {
-            background: #f8f9fa;
+            background: var(--surface-muted);
             border-left: 3px solid #667eea;
             padding: 15px;
             margin: 20px 0;
@@ -366,6 +493,52 @@
 
         details[open] summary {
             margin-bottom: 20px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --page-text: #e5e7eb;
+                --page-bg: #0e1117;
+                --surface-bg: #151b24;
+                --surface-muted: #111720;
+                --feature-card-bg: linear-gradient(135deg, rgba(33, 47, 77, 0.9) 0%, rgba(45, 31, 70, 0.9) 100%);
+                --note-bg: #4f3f12;
+                --note-text: #fff3c6;
+                --note-border: #f5c84c;
+                --border-soft: #273245;
+                --border-table: #2f3b50;
+                --hover-row: #192233;
+                --inline-code-bg: #1f2937;
+                --caption-text: #b1b9c6;
+                --toc-link: #e5e7eb;
+                --toc-note: #9aa6b8;
+                --highlight-bg: #4f3f12;
+                --highlight-text: #fff3c6;
+                --terminal-bg: #0f1726;
+                --terminal-text: #d2d9e6;
+                --code-bg: #0f1726;
+                --code-text: #e8edf5;
+                --code-border: #2a3448;
+                --kw: #7aa2ff;
+                --fn: #d4b27d;
+                --str: #f39b9b;
+                --comment: #73c991;
+                --var: #9ecbff;
+                --num: #8cd6a8;
+                --op: #e8edf5;
+                --link-accent: #9fb6ff;
+                --tip-bg: linear-gradient(135deg, rgba(33, 47, 77, 0.9) 0%, rgba(45, 31, 70, 0.9) 100%);
+                --hero-gradient: linear-gradient(135deg, #182744 0%, #2b1d42 100%);
+            }
+
+            .btn-demo {
+                background: #e8ecf5;
+                color: #4b3b78;
+            }
+
+            .feature-card {
+                border: 1px solid rgba(146, 168, 255, 0.22);
+            }
         }
     </style>
 
@@ -402,11 +575,10 @@
     </div>
 
     <div class="container">
-        <h2 style="text-align: center; color: #764ba2; margin-bottom: 30px;">Project Vision & Objectives</h2>
+        <h2 class="section-title">Project Vision & Objectives</h2>
 
-        <div
-            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
-            <h3 style="margin-top: 0; color: #764ba2;">Deep Understanding Through Complete Implementation</h3>
+        <div class="feature-card">
+            <h3 class="feature-title">Deep Understanding Through Complete Implementation</h3>
             <p>
                 <strong>The best way to truly understand Large Language Models
                     is to build one from scratch</strong>. Rather than relying on high-level frameworks or pre-built
@@ -422,14 +594,13 @@
             </p>
         </div>
 
-        <div
-            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
-            <h3 style="margin-top: 0; color: #764ba2;">Optimization Challenges & GPU Computing</h3>
+        <div class="feature-card">
+            <h3 class="feature-title">Optimization Challenges & GPU Computing</h3>
             <p>
                 Training language models presents unique computational challenges that demand <strong>massively parallel
                     architectures</strong>. Modern GPUs excel at this task through:
             </p>
-            <ul style="margin-left: 20px;">
+            <ul class="list-tight-left">
                 <li><strong>Parallel Matrix Operations:</strong> Transformer attention mechanisms and feed-forward
                     networks
                     are naturally parallelizable, making GPUs essential for reasonable training times</li>
@@ -441,13 +612,12 @@
             </ul>
         </div>
 
-        <div
-            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
-            <h3 style="margin-top: 0; color: #764ba2;">Efficient & Sustainable AI: Research Goals</h3>
+        <div class="feature-card">
+            <h3 class="feature-title">Efficient & Sustainable AI: Research Goals</h3>
             <p>
                 This project explores critical questions at the intersection of AI performance and sustainability:
             </p>
-            <ul style="margin-left: 20px;">
+            <ul class="list-tight-left">
                 <li><strong>Low-Cost Inference Models:</strong> Investigating architectures and training strategies that
                     minimize computational requirements during deployment, directly reducing energy consumption and
                     carbon
@@ -465,13 +635,12 @@
             </ul>
         </div>
 
-        <div
-            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 40px;">
-            <h3 style="margin-top: 0; color: #764ba2;">Skills Demonstrated & Professional Value</h3>
+        <div class="feature-card last">
+            <h3 class="feature-title">Skills Demonstrated & Professional Value</h3>
             <p>
                 This project showcases expertise across the full AI/ML engineering stack:
             </p>
-            <ul style="margin-left: 20px;">
+            <ul class="list-tight-left">
                 <li><strong>Deep Learning Fundamentals:</strong> Mathematical understanding of transformers, attention
                     mechanisms, and optimization algorithms</li>
                 <li><strong>Systems Programming:</strong> GPU optimization, memory management, and high-performance
@@ -495,7 +664,7 @@
 
 
     <div class="container">
-        <h2 style="text-align: center; color: #764ba2; margin-bottom: 30px;">Hugging Face Deployment</h2>
+        <h2 class="section-title">Hugging Face Deployment</h2>
 
         <p>
             HilbertLM is available on Hugging Face Hub, making it easy to download and use the model locally.
@@ -506,13 +675,17 @@
             There's 4 models currently available on Hugging Face:
         </p>
         <ul>
-            <li><code>baillietn/Hilbert-135M-Base</code>: A base model with 135 million parameters trained in BF16 precision</li>
+            <li><code>baillietn/Hilbert-135M-Base</code>: A base model with 135 million parameters trained in BF16
+                precision</li>
             <li><code>baillietn/Hilbert-135M-Chat</code>: A chat fine-tuned version of the BF16 base model</li>
-            <li><code>baillietn/Hilbert-162M-Base-FP8</code>: A base model with 162 million parameters trained in FP8 precision</li>
+            <li><code>baillietn/Hilbert-162M-Base-FP8</code>: A base model with 162 million parameters trained in FP8
+                precision</li>
             <li><code>baillietn/Hilbert-162M-Chat-FP8</code>: A chat fine-tuned version of the FP8 base model</li>
         </ul>
 
-        These models can be accessed through the HF Collection: <a href="https://huggingface.co/collections/baillietn/hilbertlm" target="_blank" style="color: #667eea; font-weight: bold;">https://huggingface.co/collections/baillietn/hilbertlm</a>
+        These models can be accessed through the HF Collection: <a
+            href="https://huggingface.co/collections/baillietn/hilbertlm" target="_blank"
+            class="link-accent">https://huggingface.co/collections/baillietn/hilbertlm</a>
 
         <h3>Installation</h3>
         <p>
@@ -606,7 +779,7 @@ outputs <span class="code-operator">=</span> generator(
         <p>
             You can customize the generation behavior with these key parameters:
         </p>
-        <ul style="line-height: 1.8;">
+        <ul class="list-spacious">
             <li><strong>temperature</strong>: Controls randomness (0.0 = deterministic, higher = more random)</li>
             <li><strong>top_p</strong>: Nucleus sampling - considers tokens with cumulative probability up to p</li>
             <li><strong>top_k</strong>: Limits sampling to the k most likely next tokens</li>
@@ -614,9 +787,8 @@ outputs <span class="code-operator">=</span> generator(
             <li><strong>do_sample</strong>: Set to True for sampling, False for greedy decoding</li>
         </ul>
 
-        <div
-            style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 8px; padding: 20px; margin: 25px 0;">
-            <p style="margin: 0;">
+        <div class="tip-box">
+            <p>
                 <strong>💡 Tip:</strong> For chat-based interactions, use the fine-tuned chat model and format
                 your prompts appropriately with conversation markers or system/user/assistant tags depending on
                 your training format.
@@ -626,7 +798,7 @@ outputs <span class="code-operator">=</span> generator(
     </div>
 
     <div class="container">
-        <h2 style="text-align: center; color: #764ba2; margin-bottom: 10px;">Table of Contents</h2>
+        <h2 class="section-title compact">Table of Contents</h2>
         <nav class="toc">
             <ol>
                 <li><a href="#abstract">Abstract</a></li>
@@ -670,12 +842,11 @@ outputs <span class="code-operator">=</span> generator(
 
         <h2 id="transformer-theory">2. Transformer Architecture: Mathematical Foundations</h2>
 
-        <div
-            style="background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; border-radius: 4px; margin: 20px 0;">
+        <div class="note-box">
             <strong>⚠️ Note:</strong> This section provides a concise theoretical overview for readers interested in the
             mathematical foundations.
             If you're already familiar with Transformers or prefer to focus on implementation details,
-            <a href="#architecture" style="color: #667eea; font-weight: bold;">skip to Section 3: Model
+            <a href="#architecture" class="link-accent">skip to Section 3: Model
                 Architecture</a>.
         </div>
 
@@ -1031,7 +1202,7 @@ outputs <span class="code-operator">=</span> generator(
                     $$
                     \begin{aligned}
                     \hat{\mathbf{m}}_t &= \frac{\mathbf{m}_t}{1 - \beta_1^t} \\
-                    \hat{\mathbf{v}}_t &= \frac{\mathbf{v}_t}{1 - \beta_2^t} 
+                    \hat{\mathbf{v}}_t &= \frac{\mathbf{v}_t}{1 - \beta_2^t}
                     \end{aligned}
                     $$
                 </p>
@@ -1068,7 +1239,7 @@ outputs <span class="code-operator">=</span> generator(
 
                 <div class="architecture-box">
                     <strong>HilbertLM Configuration:</strong>
-                    <ul style="margin-top: 10px;">
+                    <ul class="list-tight-left mt-10">
                         <li><code>vocab_size</code>: 49,152 tokens</li>
                         <li><code>block_size</code>: 2,048 context length</li>
                         <li><code>d_model</code>: 576 hidden dimensions</li>
@@ -1282,7 +1453,7 @@ outputs <span class="code-operator">=</span> generator(
                 <p>
                     Messages are formatted using ChatML-style markers:
                 </p>
-                <code style="display: block; background: #f4f4f4; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <code class="chatml-block">
 &lt;|im_start|&gt;user<br>
 {user message}&lt;|im_end|&gt;<br>
 &lt;|im_start|&gt;assistant<br>
@@ -1633,14 +1804,13 @@ outputs <span class="code-operator">=</span> generator(
                     </li>
                 </ol>
 
-                <div style="text-align: center; margin: 60px 0 40px 0;">
+                <div class="page-footer-cta">
                     <a href="chat/" class="btn-demo">Try HilbertLM Now</a>
                 </div>
 
-                <div
-                    style="text-align: center; color: #666; padding: 20px; border-top: 1px solid #eee; margin-top: 40px;">
+                <div class="page-footer">
                     <p>HilbertLM Project - Demonstrating modern language model training from scratch</p>
-                    <p style="font-size: 0.9rem;">Built with PyTorch and HuggingFace Datasets</p>
+                    <p><small>Built with PyTorch and HuggingFace Datasets</small></p>
                 </div>
     </div>
 
