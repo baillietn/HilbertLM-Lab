@@ -182,6 +182,93 @@
             font-size: 0.9em;
         }
 
+        /* Syntax highlighting - VS Code Light theme colors */
+        .code-block {
+            background: #f5f5f5;
+            color: #000000;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e1e4e8;
+            border-left: 4px solid #667eea;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            white-space: pre;
+        }
+
+        .code-block code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .code-keyword {
+            color: #0000FF;
+            font-weight: 600;
+        }
+
+        /* import, from, def, class, with, etc. */
+        .code-function {
+            color: #795E26;
+        }
+
+        /* function names */
+        .code-string {
+            color: #A31515;
+        }
+
+        /* strings */
+        .code-comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        /* comments */
+        .code-variable {
+            color: #001080;
+        }
+
+        /* variables, parameters */
+        .code-number {
+            color: #098658;
+        }
+
+        /* numbers */
+        .code-operator {
+            color: #000000;
+        }
+
+        /* =, +, -, etc. */
+        .code-builtin {
+            color: #0000FF;
+            font-weight: 600;
+        }
+
+        /* True, False, None, print */
+
+        /* Terminal/Shell styling */
+        .terminal-block {
+            background: #f5f5f5;
+            color: #333333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #e1e4e8;
+            border-left: 4px solid #667eea;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .terminal-command {
+            color: #0066cc;
+            font-weight: 500;
+        }
+
         sup a {
             text-decoration: none;
             color: #667eea;
@@ -309,9 +396,233 @@
             </svg>
         </a>
         <h1>🤖 HilbertLM Project</h1>
-        <p>Training a 135M parameter language model from scratch</p>
+        <p>Training a small language model from scratch</p>
 
-        <a href="chat/" class="btn-demo">Try Demo</a>
+        <a href="chat/" class="btn-demo">Try HilbertLM</a>
+    </div>
+
+    <div class="container">
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 30px;">Project Vision & Objectives</h2>
+
+        <div
+            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
+            <h3 style="margin-top: 0; color: #764ba2;">Deep Understanding Through Complete Implementation</h3>
+            <p>
+                <strong>The best way to truly understand Large Language Models
+                    is to build one from scratch</strong>. Rather than relying on high-level frameworks or pre-built
+                solutions, HilbertLM was built by implementing every component of the modern LM pipeline—from
+                tokenization and architecture
+                design to training optimization and deployment.
+            </p>
+            <p>
+                As a <strong>personal research project with a single contributor</strong>, this approach allows for
+                uncompromising attention to detail and deep exploration of each technical decision. Every line of code,
+                every architectural choice, and every optimization technique is intentionally implemented to maximize
+                learning and innovation.
+            </p>
+        </div>
+
+        <div
+            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
+            <h3 style="margin-top: 0; color: #764ba2;">Optimization Challenges & GPU Computing</h3>
+            <p>
+                Training language models presents unique computational challenges that demand <strong>massively parallel
+                    architectures</strong>. Modern GPUs excel at this task through:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Parallel Matrix Operations:</strong> Transformer attention mechanisms and feed-forward
+                    networks
+                    are naturally parallelizable, making GPUs essential for reasonable training times</li>
+                <li><strong>Flash Attention:</strong> Memory-efficient attention algorithms that reduce the quadratic
+                    complexity bottleneck while maintaining numerical accuracy</li>
+                <li><strong>FP8 Research:</strong> Exploring 8-bit floating-point arithmetic for training using modern
+                    GPUs architectures (NVIDIA Ada, Hopper and Blackwell series),
+                    pushing the boundaries of numerical precision vs. computational efficiency using efficiency</li>
+            </ul>
+        </div>
+
+        <div
+            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 30px;">
+            <h3 style="margin-top: 0; color: #764ba2;">Efficient & Sustainable AI: Research Goals</h3>
+            <p>
+                This project explores critical questions at the intersection of AI performance and sustainability:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Low-Cost Inference Models:</strong> Investigating architectures and training strategies that
+                    minimize computational requirements during deployment, directly reducing energy consumption and
+                    carbon
+                    footprint. Every watt saved during inference scales across millions of user interactions.</li>
+                <li><strong>FP8 Training & Inference:</strong> Rigorously testing whether 8-bit precision can maintain
+                    model quality while delivering significant speed improvements. Does reduced
+                    precision create a meaningful performance gap, or can we achieve comparable results with half the
+                    bits?</li>
+                <li><strong>Scaling Laws & Efficiency:</strong> Understanding the trade-offs between model size,
+                    training
+                    compute, and inference cost to identify optimal configurations for different use cases</li>
+                <li><strong>Practical Deployment:</strong> Building models that can run efficiently on consumer
+                    hardware,
+                    democratizing access to powerful language models</li>
+            </ul>
+        </div>
+
+        <div
+            style="background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); padding: 30px; border-radius: 8px; margin-bottom: 40px;">
+            <h3 style="margin-top: 0; color: #764ba2;">Skills Demonstrated & Professional Value</h3>
+            <p>
+                This project showcases expertise across the full AI/ML engineering stack:
+            </p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Deep Learning Fundamentals:</strong> Mathematical understanding of transformers, attention
+                    mechanisms, and optimization algorithms</li>
+                <li><strong>Systems Programming:</strong> GPU optimization, memory management, and high-performance
+                    computing with PyTorch</li>
+                <li><strong>MLOps & Data Engineering:</strong> Pipeline design, experiment tracking, distributed
+                    training,
+                    and model deployment</li>
+                <li><strong>Research & Innovation:</strong> Independent exploration of cutting-edge techniques (FP8,
+                    curriculum learning, GQA) with critical evaluation of results</li>
+                <li><strong>End-to-End Ownership:</strong> Taking a project from theoretical concepts to a working,
+                    deployable product through the export to an Hugging Face model</li>
+                <li><strong>Technical Communication:</strong> Documenting complex concepts clearly for diverse audiences
+                </li>
+            </ul>
+            <p>
+                Beyond technical skills, this project demonstrates <strong>self-direction, persistence, and the ability
+                    to navigate ambiguity</strong>—qualities essential for advanced AI research and engineering roles.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <h2 style="text-align: center; color: #764ba2; margin-bottom: 30px;">Hugging Face Deployment</h2>
+
+        <p>
+            HilbertLM is available on Hugging Face Hub, making it easy to download and use the model locally.
+            This section demonstrates how to load the model and perform inference using the Hugging Face
+            <code>transformers</code> library.
+        </p>
+        <p>
+            There's 4 models currently available on Hugging Face:
+        </p>
+        <ul>
+            <li><code>baillietn/Hilbert-135M-Base</code>: A base model with 135 million parameters trained in BF16 precision</li>
+            <li><code>baillietn/Hilbert-135M-Chat</code>: A chat fine-tuned version of the BF16 base model</li>
+            <li><code>baillietn/Hilbert-162M-Base-FP8</code>: A base model with 162 million parameters trained in FP8 precision</li>
+            <li><code>baillietn/Hilbert-162M-Chat-FP8</code>: A chat fine-tuned version of the FP8 base model</li>
+        </ul>
+
+        These models can be accessed through the HF Collection: <a href="https://huggingface.co/collections/baillietn/hilbertlm" target="_blank" style="color: #667eea; font-weight: bold;">https://huggingface.co/collections/baillietn/hilbertlm</a>
+
+        <h3>Installation</h3>
+        <p>
+            First, ensure you have the required dependencies installed:
+        </p>
+        <div class="terminal-block">
+            <span class="terminal-command">pip install torch transformers</span>
+        </div>
+
+        <h3>Loading the Model from Hugging Face</h3>
+        <p>
+            To download and load HilbertLM locally, use the following code. The model will be automatically
+            downloaded from Hugging Face Hub and cached locally:
+        </p>
+        <div class="code-block">
+            <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">from</span> transformers <span class="code-keyword">import</span> AutoTokenizer, AutoModelForCausalLM
+
+<span class="code-comment"># Load the tokenizer and model from Hugging Face Hub</span>
+model_path <span class="code-operator">=</span> <span class="code-string">"baillietn/Hilbert-135M-Base"</span> 
+tokenizer <span class="code-operator">=</span> AutoTokenizer.<span class="code-function">from_pretrained</span>(model_path)
+model <span class="code-operator">=</span> AutoModelForCausalLM.<span class="code-function">from_pretrained</span>(
+    model_path,
+    trust_remote_code<span class="code-operator">=</span><span class="code-builtin">True</span>  <span class="code-comment"># Allow custom model code from the repository</span>,
+    torch_dtype=torch.bfloat16
+)
+
+<span class="code-comment"># Move model to GPU if available</span>
+device <span class="code-operator">=</span> <span class="code-string">"cuda"</span> <span class="code-keyword">if</span> torch.cuda.<span class="code-function">is_available</span>() <span class="code-keyword">else</span> <span class="code-string">"cpu"</span>
+model <span class="code-operator">=</span> model.<span class="code-function">to</span>(device)</code></pre>
+        </div>
+
+        <h3>Running Inference</h3>
+        <p>
+            Once the model is loaded, you can generate text completions. Here's a simple inference example:
+        </p>
+        <div class="code-block">
+            <pre><code><span class="code-keyword">import</span> torch
+<span class="code-keyword">from</span> transformers <span class="code-keyword">import</span> pipeline, set_seed
+
+<span class="code-comment"># Prepare input prompt</span>
+prompt <span class="code-operator">=</span> <span class="code-string">"The most important invention was"</span>
+
+<span class="code-comment"># Pipeline function</span>
+generator <span class="code-operator">=</span> pipeline(
+    <span class="code-string">'text-generation'</span>,
+    model=<span class="code-string">"baillietn/Hilbert-135M-Base"</span>,
+    trust_remote_code<span class="code-operator">=</span><span class="code-builtin">True</span>,
+    torch_dtype=torch.bfloat16,
+    device=<span class="code-string">"cuda"</span> <span class="code-keyword">if</span> torch.cuda.<span class="code-function">is_available</span>() <span class="code-keyword">else</span> <span class="code-string">"cpu"</span>
+)
+
+<span class="code-function">set_seed</span>(<span class="code-number">37</span>)  <span class="code-comment"># For reproducibility</span>
+
+<span class="code-comment"># Generate text</span>
+outputs <span class="code-operator">=</span> generator(
+    prompt,
+    max_new_tokens<span class="code-operator">=</span><span class="code-number">10</span>,            <span class="code-comment"># Maximum number of generated tokens</span>
+    num_return_sequences<span class="code-operator">=</span><span class="code-number">3</span>,       <span class="code-comment"># Number of generated sequences</span>
+    do_sample<span class="code-operator">=</span><span class="code-builtin">True</span>,               <span class="code-comment"># Enable sampling for more diverse outputs</span>
+    temperature<span class="code-operator">=</span><span class="code-number">0.8</span>,              <span class="code-comment"># Controls randomness (0.0 = deterministic)</span>
+    top_p<span class="code-operator">=</span><span class="code-number">0.9</span>,                    <span class="code-comment"># Nucleus sampling threshold</span>
+    top_k<span class="code-operator">=</span><span class="code-number">50</span>,                     <span class="code-comment"># Top-k sampling parameter</span>
+    repetition_penalty<span class="code-operator">=</span><span class="code-number">1.0</span>,       <span class="code-comment"># Penalty for repeated tokens</span>
+    return_full_text<span class="code-operator">=</span><span class="code-builtin">True</span>,        <span class="code-comment"># Return the full text including the input prompt</span>
+    eos_token_id<span class="code-operator">=</span>2                <span class="code-comment"># End-of-sequence token ID from the custom tokenizer</span>
+)
+
+<span class="code-comment"># print the generated text</span>
+<span class="code-builtin">print</span>(outputs)</code></pre>
+
+        </div>
+
+        <p>
+            Here are few examples of generated outputs for the prompt <code>"The most important invention was"</code>:
+        </p>
+
+        <div class="terminal-block">
+            <p>
+                The most important invention was the invention of the telegraph, which made possible...
+            </p>
+            <p>
+                The most important invention was the electric motor, which had the power to accelerate...
+            </p>
+            <p>
+                The most important invention was the screwdriver. The screwdriver was used to...
+            </p>
+        </div>
+
+        <h3>Generation Parameters</h3>
+        <p>
+            You can customize the generation behavior with these key parameters:
+        </p>
+        <ul style="line-height: 1.8;">
+            <li><strong>temperature</strong>: Controls randomness (0.0 = deterministic, higher = more random)</li>
+            <li><strong>top_p</strong>: Nucleus sampling - considers tokens with cumulative probability up to p</li>
+            <li><strong>top_k</strong>: Limits sampling to the k most likely next tokens</li>
+            <li><strong>max_length</strong>: Maximum length of the generated sequence (including input)</li>
+            <li><strong>do_sample</strong>: Set to True for sampling, False for greedy decoding</li>
+        </ul>
+
+        <div
+            style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 8px; padding: 20px; margin: 25px 0;">
+            <p style="margin: 0;">
+                <strong>💡 Tip:</strong> For chat-based interactions, use the fine-tuned chat model and format
+                your prompts appropriately with conversation markers or system/user/assistant tags depending on
+                your training format.
+            </p>
+        </div>
+
     </div>
 
     <div class="container">
@@ -467,7 +778,8 @@
                 where the base frequency for dimension pair $j$ is defined as:
             </p>
             <p>
-                $$\theta_j = 10000^{-2j/d_{\text{model}}} \quad \text{for } j \in \llbracket 0, d_{\text{model}}/2 - 1 \rrbracket$$
+                $$\theta_j = 10000^{-2j/d_{\text{model}}} \quad \text{for } j \in \llbracket 0, d_{\text{model}}/2 - 1
+                \rrbracket$$
             </p>
             <p>
                 This choice of frequencies creates a geometric progression from high-frequency rotations (small
@@ -567,7 +879,8 @@
         </p>
         <p>
             $\mathbf{W}_O \in \mathbb{R}^{d_{\text{model}} \times d_{\text{model}}}$ is a learned output projection
-            matrix. It combines the outputs of all heads back into a single vector of dimension $d_{\text{model}}$ for each token.
+            matrix. It combines the outputs of all heads back into a single vector of dimension $d_{\text{model}}$ for
+            each token.
         </p>
         <p>
             <em>Note on RoPE with Multi-Head:</em> When using multiple attention heads, RoPE is applied independently
@@ -578,662 +891,757 @@
 
         <p><strong>Grouped Query Attention (GQA):</strong></p>
         <p>
-            HilbertLM uses GQA, which reduces memory by sharing key-value pairs across multiple query heads. With 9 query
+            HilbertLM uses GQA, which reduces memory by sharing key-value pairs across multiple query heads. With 9
+            query
             heads and 3 KV heads:
         </p>
         <p>
             This reduces the KV-cache size by during inference while maintaining model quality.
         </p>
         <p>
-            In the general case, with $h$ query heads and $g$ key-value head groups (where $g < h$ and $h$ is divisible by $g$), 
-            each KV head is shared among $h/g$ query heads:
-        </p>
-        <p>
-            $$\text{GQA}(\mathbf{X}) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h) \mathbf{W}_O$$
-        </p>
-        <p>
-            where $\text{head}_i = \text{CausalAttention}(\mathbf{Q}_i, \mathbf{K}_{\lfloor (i-1) \times \frac{g}{h} \rfloor}, \mathbf{V}_{\lfloor (i-1) \times \frac{g}{h} \rfloor})$ for $i \in \llbracket 1, h \rrbracket$.
-            Each query head $i$ attends using the shared key-value pair from group $\lfloor (i-1) \times \frac{g}{h} \rfloor$.
-        </p>
-        <h3>2.4 Feedforward Network & Layer Structure</h3>
-        <p>
-            After attention, each token representation is processed independently through a feedforward network (FFN):
-        </p>
-        <p>
-            $$\text{FFN}(\mathbf{x}) = \text{SwiGLU}(\mathbf{x} \mathbf{W}_1) \mathbf{W}_2$$
-        </p>
-        <p>
-            where SwiGLU is a gated activation function that splits the hidden dimension and applies element-wise
-            multiplication:
-        </p>
-        <p>
-            $$\text{SwiGLU}(\mathbf{x}) = \text{SiLU}(\mathbf{x}_{1:d}) \odot \mathbf{x}_{d+1:2d}$$
-        </p>
-        <p>
-            SiLU (Sigmoid Linear Unit) is applied element-wise and is defined as:
-        </p>
-        <p>
-            $$\text{SiLU}(\mathbf{z}) = \mathbf{z} \odot \sigma(\mathbf{z}) = \frac{\mathbf{z}}{1 + e^{-\mathbf{z}}}$$
-        </p>
-        <p>
-            The complete <strong>transformer block</strong> applies attention and FFN with residual connections and normalization:
-        </p>
-        <p>
-            $$
-            \begin{cases}
-            \tilde{\mathbf{X}}^{(k+1)} &= \mathbf{X}^{(k)} + \text{GQA}(\text{LayerNorm}(\mathbf{X}^{(k)})) \\
-            \mathbf{X}^{(k+1)} &= \tilde{\mathbf{X}}^{(k+1)} + \text{FFN}(\text{LayerNorm}(\tilde{\mathbf{X}}^{(k+1)}))
-            \end{cases}
-            $$
-        </p>
+            In the general case, with $h$ query heads and $g$ key-value head groups (where $g < h$ and $h$ is divisible
+                by $g$), each KV head is shared among $h/g$ query heads: </p>
+                <p>
+                    $$\text{GQA}(\mathbf{X}) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h) \mathbf{W}_O$$
+                </p>
+                <p>
+                    where $\text{head}_i = \text{CausalAttention}(\mathbf{Q}_i, \mathbf{K}_{\lfloor (i-1) \times
+                    \frac{g}{h} \rfloor}, \mathbf{V}_{\lfloor (i-1) \times \frac{g}{h} \rfloor})$ for $i \in \llbracket
+                    1, h \rrbracket$.
+                    Each query head $i$ attends using the shared key-value pair from group $\lfloor (i-1) \times
+                    \frac{g}{h} \rfloor$.
+                </p>
+                <h3>2.4 Feedforward Network & Layer Structure</h3>
+                <p>
+                    After attention, each token representation is processed independently through a feedforward network
+                    (FFN):
+                </p>
+                <p>
+                    $$\text{FFN}(\mathbf{x}) = \text{SwiGLU}(\mathbf{x} \mathbf{W}_1) \mathbf{W}_2$$
+                </p>
+                <p>
+                    where SwiGLU is a gated activation function that splits the hidden dimension and applies
+                    element-wise
+                    multiplication:
+                </p>
+                <p>
+                    $$\text{SwiGLU}(\mathbf{x}) = \text{SiLU}(\mathbf{x}_{1:d}) \odot \mathbf{x}_{d+1:2d}$$
+                </p>
+                <p>
+                    SiLU (Sigmoid Linear Unit) is applied element-wise and is defined as:
+                </p>
+                <p>
+                    $$\text{SiLU}(\mathbf{z}) = \mathbf{z} \odot \sigma(\mathbf{z}) = \frac{\mathbf{z}}{1 +
+                    e^{-\mathbf{z}}}$$
+                </p>
+                <p>
+                    The complete <strong>transformer block</strong> applies attention and FFN with residual connections
+                    and normalization:
+                </p>
+                <p>
+                    $$
+                    \begin{cases}
+                    \tilde{\mathbf{X}}^{(k+1)} &= \mathbf{X}^{(k)} + \text{GQA}(\text{LayerNorm}(\mathbf{X}^{(k)})) \\
+                    \mathbf{X}^{(k+1)} &= \tilde{\mathbf{X}}^{(k+1)} +
+                    \text{FFN}(\text{LayerNorm}(\tilde{\mathbf{X}}^{(k+1)}))
+                    \end{cases}
+                    $$
+                </p>
 
-        <h3>2.5 From Hidden States to Probabilities</h3>
-        <p>
-            After $L$ transformer layers (30 in HilbertLM), the final hidden state is projected back to vocabulary space
-            through weights tied with the input embedding (which is a common practice to reduce parameters without
-            sacrificing performance):
-        </p>
-        <p>
-            $$\mathbf{Z} = \text{LayerNorm}(\mathbf{X}^{(L)}) \quad \Rightarrow \quad \text{logits} = \mathbf{Z}
-            \mathbf{W}_{\text{vocab}}^T \in \mathbb{R}^{n \times |V|}$$
-        </p>
-        <p>
-            Softmax converts logits to a probability distribution over the vocabulary:
-        </p>
-        <p>
-            $$(\mathbb{P}(t_{i+1} \mid t_1, \ldots, t_i))_{1 \leq i \leq n} = \text{softmax}(\text{logits}) \in
-            \mathbb{R}^{n \times |V|}$$
-        </p>
+                <h3>2.5 From Hidden States to Probabilities</h3>
+                <p>
+                    After $L$ transformer layers (30 in HilbertLM), the final hidden state is projected back to
+                    vocabulary space
+                    through weights tied with the input embedding (which is a common practice to reduce parameters
+                    without
+                    sacrificing performance):
+                </p>
+                <p>
+                    $$\mathbf{Z} = \text{LayerNorm}(\mathbf{X}^{(L)}) \quad \Rightarrow \quad \text{logits} = \mathbf{Z}
+                    \mathbf{W}_{\text{vocab}}^T \in \mathbb{R}^{n \times |V|}$$
+                </p>
+                <p>
+                    Softmax converts logits to a probability distribution over the vocabulary:
+                </p>
+                <p>
+                    $$(\mathbb{P}(t_{i+1} \mid t_1, \ldots, t_i))_{1 \leq i \leq n} = \text{softmax}(\text{logits}) \in
+                    \mathbb{R}^{n \times |V|}$$
+                </p>
 
-        <h3>2.6 Training Objective: Cross-Entropy Loss</h3>
-        <p>
-            The model is trained to predict the next token in a sequence. Given ground truth token $t^*$, the loss for a
-            single position is:
-        </p>
-        <p>
-            $$\mathcal{L}_{i}(\theta) = -\log \mathbb{P}(t_{i+1} = t^* \mid t_1, \ldots, t_i) = -\log
-            (\text{softmax}(\text{logits})_{i,\text{id}(t^*) + 1})$$
-        </p>
-        <p>
-            For a full sequence of length $n$, we average losses across all positions:
-        </p>
-        <p>
-            $$\mathcal{L}_{\text{seq}}(\theta) = \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}_{i}(\theta)$$
-        </p>
-        <p>
-            This process is repeated in parallel across all sequences in the training batch, and the total loss is
-            averaged over the batch. The model parameters $\theta$ are then updated to minimize this loss using
-            gradient-based optimization.
-        </p>
+                <h3>2.6 Training Objective: Cross-Entropy Loss</h3>
+                <p>
+                    The model is trained to predict the next token in a sequence. Given ground truth token $t^*$, the
+                    loss for a
+                    single position is:
+                </p>
+                <p>
+                    $$\mathcal{L}_{i}(\theta) = -\log \mathbb{P}(t_{i+1} = t^* \mid t_1, \ldots, t_i) = -\log
+                    (\text{softmax}(\text{logits})_{i,\text{id}(t^*) + 1})$$
+                </p>
+                <p>
+                    For a full sequence of length $n$, we average losses across all positions:
+                </p>
+                <p>
+                    $$\mathcal{L}_{\text{seq}}(\theta) = \frac{1}{n} \sum_{i=1}^{n} \mathcal{L}_{i}(\theta)$$
+                </p>
+                <p>
+                    This process is repeated in parallel across all sequences in the training batch, and the total loss
+                    is
+                    averaged over the batch. The model parameters $\theta$ are then updated to minimize this loss using
+                    gradient-based optimization.
+                </p>
 
-        <h3>2.7 Optimization: AdamW</h3>
-        <p>
-            Model parameters $\theta$ are updated using AdamW<sup><a href="#ref7">[7]</a></sup>, a variant of Adam that
-            decouples weight decay from gradient updates.
-            The update rule combines:
-        </p>
-        <ol>
-            <li><strong>Momentum:</strong> Exponential moving average of gradients ($\beta_1 = 0.9$)</li>
-            <li><strong>Adaptive learning rates:</strong> Per-parameter scaling based on gradient variance ($\beta_2 =
-                0.999$)</li>
-            <li><strong>Weight decay:</strong> L2 regularization applied directly to weights ($\lambda = 0.1$)</li>
-        </ol>
-        <p>
-            At each training step $t$:
-        </p>
-        <p>
-            $$
-            \begin{aligned}
-            \mathbf{m}_t &= \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \nabla_{\theta} \mathcal{L}_t \quad
-            \text{(momentum)} \\
-            \mathbf{v}_t &= \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) (\nabla_{\theta} \mathcal{L}_t)^2 \quad
-            \text{(variance)} \\
-            \theta_t &= \theta_{t-1} - \eta \left( \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon} +
-            \lambda \theta_{t-1} \right)
-            \end{aligned}
-            $$
-        </p>
-        <p>
-            where $\hat{\mathbf{m}}_t$ and $\hat{\mathbf{v}}_t$ are bias-corrected estimates, and $\eta$ is the learning
-            rate (max 3e-3 for HilbertLM).
-        </p>
+                <h3>2.7 Optimization: AdamW</h3>
+                <p>
+                    Model parameters $\theta$ are updated using AdamW<sup><a href="#ref7">[7]</a></sup>, a variant of
+                    Adam that
+                    decouples weight decay from gradient updates.
+                    The update rule combines:
+                </p>
+                <ol>
+                    <li><strong>Momentum:</strong> Exponential moving average of gradients ($\beta_1 = 0.9$)</li>
+                    <li><strong>Adaptive learning rates:</strong> Per-parameter scaling based on gradient variance
+                        ($\beta_2 =
+                        0.999$)</li>
+                    <li><strong>Weight decay:</strong> L2 regularization applied directly to weights ($\lambda = 0.1$)
+                    </li>
+                </ol>
+                <p>
+                    At each training step $t$:
+                </p>
+                <p>
+                    $$
+                    \begin{aligned}
+                    \mathbf{m}_t &= \beta_1 \mathbf{m}_{t-1} + (1 - \beta_1) \nabla_{\theta} \mathcal{L}_t \quad
+                    \text{(momentum)} \\
+                    \mathbf{v}_t &= \beta_2 \mathbf{v}_{t-1} + (1 - \beta_2) (\nabla_{\theta} \mathcal{L}_t)^2 \quad
+                    \text{(variance)} \\
+                    \theta_t &= \theta_{t-1} - \eta \left( \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} +
+                    \epsilon} +
+                    \lambda \theta_{t-1} \right)
+                    \end{aligned}
+                    $$
+                </p>
+                <p>
+                    where $\hat{\mathbf{m}}_t$ and $\hat{\mathbf{v}}_t$ are bias-corrected estimates, and $\eta$ is the
+                    learning
+                    rate (max 3e-3 for HilbertLM).
+                </p>
+                <p>
+                    $$
+                    \begin{aligned}
+                    \hat{\mathbf{m}}_t &= \frac{\mathbf{m}_t}{1 - \beta_1^t} \\
+                    \hat{\mathbf{v}}_t &= \frac{\mathbf{v}_t}{1 - \beta_2^t} 
+                    \end{aligned}
+                    $$
+                </p>
 
-        <h3>2.8 Why This Architecture Works</h3>
-        <ul>
-            <li><strong>Parallelization:</strong> Unlike RNNs, all tokens are processed simultaneously during training,
-                enabling efficient GPU utilization.</li>
-            <li><strong>Long-range dependencies:</strong> Self-attention can directly connect distant tokens, avoiding
-                the vanishing gradient problem of sequential models.</li>
-            <li><strong>Scalability:</strong> The architecture scales predictably with model size (parameters) and data
-                (tokens), following empirical laws like Chinchilla scaling<sup><a href="#ref8">[8]</a></sup>.</li>
-        </ul>
+                <h3>2.8 Why This Architecture Works</h3>
+                <ul>
+                    <li><strong>Parallelization:</strong> Unlike RNNs, all tokens are processed simultaneously during
+                        training,
+                        enabling efficient GPU utilization.</li>
+                    <li><strong>Long-range dependencies:</strong> Self-attention can directly connect distant tokens,
+                        avoiding
+                        the vanishing gradient problem of sequential models.</li>
+                    <li><strong>Scalability:</strong> The architecture scales predictably with model size (parameters)
+                        and data
+                        (tokens), following empirical laws like Chinchilla scaling<sup><a href="#ref8">[8]</a></sup>.
+                    </li>
+                </ul>
 
-        <p>
-            <strong>Further Reading:</strong> For the complete derivation and ablation studies, refer to the original
-            Transformer paper<sup><a href="#ref1">[1]</a></sup>.
-        </p>
+                <p>
+                    <strong>Further Reading:</strong> For the complete derivation and ablation studies, refer to the
+                    original
+                    Transformer paper<sup><a href="#ref1">[1]</a></sup>.
+                </p>
 
 
-        <h2 id="architecture">3. Model Architecture Design</h2>
+                <h2 id="architecture">3. Model Architecture Design</h2>
 
-        <h3>3.1 Architecture Overview</h3>
-        <p>
-            HilbertLM is based on a decoder-only transformer architecture with several modern enhancements.
-            The model follows a Llama-style architecture, inspired by SmolLM-135M<sup><a href="#ref2">[2]</a></sup>.
-        </p>
+                <h3>3.1 Architecture Overview</h3>
+                <p>
+                    HilbertLM is based on a decoder-only transformer architecture with several modern enhancements.
+                    The model follows a Llama-style architecture, inspired by SmolLM-135M<sup><a
+                            href="#ref2">[2]</a></sup>.
+                </p>
 
-        <div class="architecture-box">
-            <strong>HilbertLM Configuration:</strong>
-            <ul style="margin-top: 10px;">
-                <li><code>vocab_size</code>: 49,152 tokens</li>
-                <li><code>block_size</code>: 2,048 context length</li>
-                <li><code>d_model</code>: 576 hidden dimensions</li>
-                <li><code>n_head</code>: 9 attention heads</li>
-                <li><code>n_kv_head</code>: 3 key-value heads (Grouped Query Attention)</li>
-                <li><code>n_layer</code>: 30 transformer blocks</li>
-                <li><strong>Total Parameters</strong>: 135,561,216 (~135M)</li>
-            </ul>
-        </div>
+                <div class="architecture-box">
+                    <strong>HilbertLM Configuration:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><code>vocab_size</code>: 49,152 tokens</li>
+                        <li><code>block_size</code>: 2,048 context length</li>
+                        <li><code>d_model</code>: 576 hidden dimensions</li>
+                        <li><code>n_head</code>: 9 attention heads</li>
+                        <li><code>n_kv_head</code>: 3 key-value heads (Grouped Query Attention)</li>
+                        <li><code>n_layer</code>: 30 transformer blocks</li>
+                        <li><strong>Total Parameters</strong>: 135,561,216 (~135M)</li>
+                    </ul>
+                </div>
 
-        <h3>3.2 Key Architectural Choices</h3>
+                <h3>3.2 Key Architectural Choices</h3>
 
-        <p><strong>Grouped Query Attention (GQA):</strong></p>
-        <p>
-            Instead of Multi-Head Attention (MHA), HilbertLM uses GQA where 9 query heads share 3 key-value heads.
-            This reduces KV-Cache memory usage by 3× while maintaining model quality, as demonstrated
-            in "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"<sup><a
-                    href="#ref3">[3]</a></sup>.
-        </p>
+                <p><strong>Grouped Query Attention (GQA):</strong></p>
+                <p>
+                    Instead of Multi-Head Attention (MHA), HilbertLM uses GQA where 9 query heads share 3 key-value
+                    heads.
+                    This reduces KV-Cache memory usage by 3× while maintaining model quality, as demonstrated
+                    in "GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints"<sup><a
+                            href="#ref3">[3]</a></sup>.
+                </p>
 
-        <p><strong>RoPE (Rotary Position Embeddings):</strong></p>
-        <p>
-            Position information is encoded using RoPE<sup><a href="#ref4">[4]</a></sup>, which applies rotations to
-            query and key vectors.
-            This approach provides better extrapolation to longer sequences compared to absolute positional embeddings
-            and integrates naturally with the attention mechanism.
-        </p>
+                <p><strong>RoPE (Rotary Position Embeddings):</strong></p>
+                <p>
+                    Position information is encoded using RoPE<sup><a href="#ref4">[4]</a></sup>, which applies
+                    rotations to
+                    query and key vectors.
+                    This approach provides better extrapolation to longer sequences compared to absolute positional
+                    embeddings
+                    and integrates naturally with the attention mechanism.
+                </p>
 
-        <p><strong>SwiGLU Activation:</strong></p>
-        <p>
-            The feedforward network uses SwiGLU activation<sup><a href="#ref5">[5]</a></sup> instead of standard ReLU,
-            improving model
-            capacity with the same parameter count. The FFN hidden dimension is set to <code>8/3 × d_model</code>.
-        </p>
+                <p><strong>SwiGLU Activation:</strong></p>
+                <p>
+                    The feedforward network uses SwiGLU activation<sup><a href="#ref5">[5]</a></sup> instead of standard
+                    ReLU,
+                    improving model
+                    capacity with the same parameter count. The FFN hidden dimension is set to
+                    <code>8/3 × d_model</code>.
+                </p>
 
-        <p><strong>LayerNorm:</strong></p>
-        <p>
-            Layer normalization is implemented using standard LayerNorm, which normalizes activations by computing
-            both mean and variance. This ensures stable training by preventing activation values from becoming too large
-            or small.
-        </p>
-        <p>
-            <em>Note:</em> Standard LayerNorm requires computing both the mean and variance for each layer. An
-            alternative
-            approach is RMSNorm<sup><a href="#ref6">[6]</a></sup>, which simplifies this by removing the mean centering
-            operation and only using the root mean square. RMSNorm is computationally
-            cheaper (~10-15% faster) and has been shown to achieve comparable performance in modern language models.
-            Migrating to RMSNorm could be a worthwhile optimization for future iterations.
-        </p>
+                <p><strong>LayerNorm:</strong></p>
+                <p>
+                    Layer normalization is implemented using standard LayerNorm, which normalizes activations by
+                    computing
+                    both mean and variance. This ensures stable training by preventing activation values from becoming
+                    too large
+                    or small.
+                </p>
+                <p>
+                    <em>Note:</em> Standard LayerNorm requires computing both the mean and variance for each layer. An
+                    alternative
+                    approach is RMSNorm<sup><a href="#ref6">[6]</a></sup>, which simplifies this by removing the mean
+                    centering
+                    operation and only using the root mean square. RMSNorm is computationally
+                    cheaper (~10-15% faster) and has been shown to achieve comparable performance in modern language
+                    models.
+                    Migrating to RMSNorm could be a worthwhile optimization for future iterations.
+                </p>
 
-        <h2 id="data">4. Data Mixture & Curriculum Learning</h2>
+                <h2 id="data">4. Data Mixture & Curriculum Learning</h2>
 
-        <h3>4.1 Dataset Sources</h3>
-        <p>
-            The training corpus combines five diverse datasets from HuggingFace, totaling 20.1 billion tokens
-            (pre-training + SFT):
-        </p>
-        <ul>
-            <li><strong>FineWeb-Edu:</strong> High-quality educational web content (general knowledge)</li>
-            <li><strong>Python-Edu:</strong> Curated Python code with educational value</li>
-            <li><strong>FineMath:</strong> Mathematical reasoning and problem-solving</li>
-            <li><strong>Cosmopedia-v2:</strong> Synthetic textbooks and educational materials</li>
-            <li><strong>SmolTalk:</strong> Conversational dialogues for chat abilities</li>
-        </ul>
+                <h3>4.1 Dataset Sources</h3>
+                <p>
+                    The training corpus combines five diverse datasets from HuggingFace, totaling 20.1 billion tokens
+                    (pre-training + SFT):
+                </p>
+                <ul>
+                    <li><strong>FineWeb-Edu:</strong> High-quality educational web content (general knowledge)</li>
+                    <li><strong>Python-Edu:</strong> Curated Python code with educational value</li>
+                    <li><strong>FineMath:</strong> Mathematical reasoning and problem-solving</li>
+                    <li><strong>Cosmopedia-v2:</strong> Synthetic textbooks and educational materials</li>
+                    <li><strong>SmolTalk:</strong> Conversational dialogues for chat abilities</li>
+                </ul>
 
-        <h3>4.2 Curriculum Learning Strategy</h3>
-        <p>
-            Pre-training is divided into 4 progressive stages, each focusing on different capabilities.
-            This curriculum approach allows the model to build foundational knowledge before tackling
-            more complex and specialized content.
-        </p>
+                <h3>4.2 Curriculum Learning Strategy</h3>
+                <p>
+                    Pre-training is divided into 4 progressive stages, each focusing on different capabilities.
+                    This curriculum approach allows the model to build foundational knowledge before tackling
+                    more complex and specialized content.
+                </p>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Stage</th>
-                    <th>Tokens</th>
-                    <th>Web</th>
-                    <th>Python</th>
-                    <th>Cosmo</th>
-                    <th>Math</th>
-                    <th>Focus</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Stage 1</strong></td>
-                    <td>8B</td>
-                    <td>85%</td>
-                    <td>15%</td>
-                    <td>0%</td>
-                    <td>0%</td>
-                    <td>General language & basic coding</td>
-                </tr>
-                <tr>
-                    <td><strong>Stage 2</strong></td>
-                    <td>6B</td>
-                    <td>70%</td>
-                    <td>20%</td>
-                    <td>10%</td>
-                    <td>0%</td>
-                    <td>+ Knowledge injection</td>
-                </tr>
-                <tr>
-                    <td><strong>Stage 3</strong></td>
-                    <td>4B</td>
-                    <td>55%</td>
-                    <td>20%</td>
-                    <td>10%</td>
-                    <td>15%</td>
-                    <td>+ Mathematical reasoning</td>
-                </tr>
-                <tr>
-                    <td><strong>Stage 4</strong></td>
-                    <td>2B</td>
-                    <td>35%</td>
-                    <td>20%</td>
-                    <td>25%</td>
-                    <td>20%</td>
-                    <td>Expert specialization</td>
-                </tr>
-            </tbody>
-        </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Tokens</th>
+                            <th>Web</th>
+                            <th>Python</th>
+                            <th>Cosmo</th>
+                            <th>Math</th>
+                            <th>Focus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Stage 1</strong></td>
+                            <td>8B</td>
+                            <td>85%</td>
+                            <td>15%</td>
+                            <td>0%</td>
+                            <td>0%</td>
+                            <td>General language & basic coding</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stage 2</strong></td>
+                            <td>6B</td>
+                            <td>70%</td>
+                            <td>20%</td>
+                            <td>10%</td>
+                            <td>0%</td>
+                            <td>+ Knowledge injection</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stage 3</strong></td>
+                            <td>4B</td>
+                            <td>55%</td>
+                            <td>20%</td>
+                            <td>10%</td>
+                            <td>15%</td>
+                            <td>+ Mathematical reasoning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stage 4</strong></td>
+                            <td>2B</td>
+                            <td>35%</td>
+                            <td>20%</td>
+                            <td>25%</td>
+                            <td>20%</td>
+                            <td>Expert specialization</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-        <p>
-            The rationale is to start with general web text to learn basic language patterns,
-            progressively introduce specialized domains (science, code, math), and end with
-            a balanced mixture emphasizing expert knowledge.
-        </p>
+                <p>
+                    The rationale is to start with general web text to learn basic language patterns,
+                    progressively introduce specialized domains (science, code, math), and end with
+                    a balanced mixture emphasizing expert knowledge.
+                </p>
 
-        <h3>4.3 Tokenizer Training</h3>
-        <p>
-            A custom Byte-Pair Encoding (BPE) tokenizer with 49,152 tokens was trained on a balanced
-            sample from all datasets. Special tokens include <code>&lt;|endoftext|&gt;</code>,
-            <code>&lt;|im_start|&gt;</code>, <code>&lt;|im_end|&gt;</code> for chat formatting,
-            and <code>&lt;|padding|&gt;</code> for sequence alignment.
-        </p>
+                <h3>4.3 Tokenizer Training</h3>
+                <p>
+                    A custom Byte-Pair Encoding (BPE) tokenizer with 49,152 tokens was trained on a balanced
+                    sample from all datasets. Special tokens include <code>&lt;|endoftext|&gt;</code>,
+                    <code>&lt;|im_start|&gt;</code>, <code>&lt;|im_end|&gt;</code> for chat formatting,
+                    and <code>&lt;|padding|&gt;</code> for sequence alignment.
+                </p>
 
-        <h2 id="pretraining">5. Base Model Training</h2>
+                <h2 id="pretraining">5. Base Model Training</h2>
 
-        <h3>5.1 Training Configuration</h3>
-        <div class="metric-card">
-            <ul>
-                <li><strong>Total Tokens:</strong> 20 billion</li>
-                <li><strong>Batch Size:</strong> 256 samples (effective) = 64 micro-batches × 4 samples</li>
-                <li><strong>Gradient Accumulation:</strong> To overcome GPU memory constraints, we process 4 samples
-                    per forward pass (micro-batch), accumulate gradients over 64 steps, then perform a single optimizer
-                    update. This allows training with large effective batch sizes (256 sequences ≈ 524K tokens) without
-                    requiring more memory.</li>
-                <li><strong>Learning Rate:</strong> Peak 3e-3 with warmup (5%) and cosine decay<sup><a
-                            href="#ref7">[7]</a></sup></li>
-                <li><strong>Optimizer:</strong> AdamW (weight decay 0.1, fused implementation)</li>
-                <li><strong>Precision:</strong> BF16 with optional FP8 using Transformer Engine (requires NVIDIA Ada,
-                    Hopper, or Blackwell GPU architectures)</li>
-                <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> and
-                    <code>F.scaled_dot_product_attention</code> enabled
-                </li>
-                <li><strong>Training Time:</strong> ~70 hours</li>
-            </ul>
-        </div>
+                <h3>5.1 Training Configuration</h3>
+                <div class="metric-card">
+                    <ul>
+                        <li><strong>Total Tokens:</strong> 20 billion</li>
+                        <li><strong>Batch Size:</strong> 256 samples (effective) = 64 micro-batches × 4 samples</li>
+                        <li><strong>Gradient Accumulation:</strong> To overcome GPU memory constraints, we process 4
+                            samples
+                            per forward pass (micro-batch), accumulate gradients over 64 steps, then perform a single
+                            optimizer
+                            update. This allows training with large effective batch sizes (256 sequences ≈ 524K tokens)
+                            without
+                            requiring more memory.</li>
+                        <li><strong>Learning Rate:</strong> Peak 3e-3 with warmup (5%) and cosine decay<sup><a
+                                    href="#ref7">[7]</a></sup></li>
+                        <li><strong>Optimizer:</strong> AdamW (weight decay 0.1, fused implementation)</li>
+                        <li><strong>Precision:</strong> BF16 with optional FP8 using Transformer Engine (requires NVIDIA
+                            Ada,
+                            Hopper, or Blackwell GPU architectures)</li>
+                        <li><strong>Hardware:</strong> NVIDIA RTX 5080 with <code>torch.compile</code> and
+                            <code>F.scaled_dot_product_attention</code> enabled
+                        </li>
+                        <li><strong>Training Time:</strong> ~70 hours</li>
+                    </ul>
+                </div>
 
-        <h3>5.2 Learning Rate Schedule</h3>
-        <p>
-            The learning rate follows a three-phase schedule:
-        </p>
-        <ol>
-            <li><strong>Warmup (0-5%):</strong> Linear increase from 0 to 3e-3 over 1B tokens</li>
-            <li><strong>Stable (5-67.5%):</strong> Constant learning rate at 3e-3</li>
-            <li><strong>Annealing (67.5-100%):</strong> Cosine decay to 1% of peak (3e-5)</li>
-        </ol>
-        <p>
-            This aggressive schedule with late annealing is designed for small models following
-            Chinchilla scaling laws, where compute budget is limited.
-        </p>
+                <h3>5.2 Learning Rate Schedule</h3>
+                <p>
+                    The learning rate follows a three-phase schedule:
+                </p>
+                <ol>
+                    <li><strong>Warmup (0-5%):</strong> Linear increase from 0 to 3e-3 over 1B tokens</li>
+                    <li><strong>Stable (5-67.5%):</strong> Constant learning rate at 3e-3</li>
+                    <li><strong>Annealing (67.5-100%):</strong> Cosine decay to 1% of peak (3e-5)</li>
+                </ol>
+                <p>
+                    This aggressive schedule with late annealing is designed for small models following
+                    Chinchilla scaling laws, where compute budget is limited.
+                </p>
 
-        <h3>5.3 Chinchilla Checkpointing</h3>
-        <p>
-            Following Chinchilla-optimal principles<sup><a href="#ref8">[8]</a></sup>, intermediate checkpoints are
-            saved every
-            <code>20 × num_parameters</code> tokens (~2.7B tokens). This allows analyzing
-            the model's evolution and provides fallback options if training becomes unstable.
-        </p>
+                <h3>5.3 Chinchilla Checkpointing</h3>
+                <p>
+                    Following Chinchilla-optimal principles<sup><a href="#ref8">[8]</a></sup>, intermediate checkpoints
+                    are
+                    saved every
+                    <code>20 × num_parameters</code> tokens (~2.7B tokens). This allows analyzing
+                    the model's evolution and provides fallback options if training becomes unstable.
+                </p>
 
-        <h2 id="sft">6. Supervised Fine-Tuning (SFT)</h2>
+                <h2 id="sft">6. Supervised Fine-Tuning (SFT)</h2>
 
-        <h3>6.1 SFT Dataset</h3>
-        <p>
-            After pretraining, the base model is fine-tuned on 100M tokens of conversational data
-            with the following mixture:
-        </p>
-        <ul>
-            <li><strong>SmolTalk (75%):</strong> Multi-turn dialogues</li>
-            <li><strong>Web + Cosmo (25%):</strong> Instructional content</li>
-        </ul>
+                <h3>6.1 SFT Dataset</h3>
+                <p>
+                    After pretraining, the base model is fine-tuned on 100M tokens of conversational data
+                    with the following mixture:
+                </p>
+                <ul>
+                    <li><strong>SmolTalk (75%):</strong> Multi-turn dialogues</li>
+                    <li><strong>Web + Cosmo (25%):</strong> Instructional content</li>
+                </ul>
 
-        <h3>6.2 Chat Format</h3>
-        <p>
-            Messages are formatted using ChatML-style markers:
-        </p>
-        <code style="display: block; background: #f4f4f4; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <h3>6.2 Chat Format</h3>
+                <p>
+                    Messages are formatted using ChatML-style markers:
+                </p>
+                <code style="display: block; background: #f4f4f4; padding: 15px; border-radius: 8px; margin: 10px 0;">
 &lt;|im_start|&gt;user<br>
 {user message}&lt;|im_end|&gt;<br>
 &lt;|im_start|&gt;assistant<br>
 {assistant response}&lt;|im_end|&gt;
         </code>
 
-        <h3>6.3 SFT Training Details</h3>
-        <p>
-            The SFT phase uses more conservative hyperparameters to avoid catastrophic forgetting:
-        </p>
-        <ul>
-            <li><strong>Learning Rate:</strong> Peak 1.5e-4 (50× lower than pretraining)</li>
-            <li><strong>Weight Decay:</strong> 0.01 (10× lower)</li>
-            <li><strong>Schedule:</strong> 5% warmup + cosine decay</li>
-            <li><strong>Loss Masking:</strong> Only assistant responses contribute to loss (user input masked with -100)
-            </li>
-        </ul>
+                <h3>6.3 SFT Training Details</h3>
+                <p>
+                    The SFT phase uses more conservative hyperparameters to avoid catastrophic forgetting:
+                </p>
+                <ul>
+                    <li><strong>Learning Rate:</strong> Peak 1.5e-4 (50× lower than pretraining)</li>
+                    <li><strong>Weight Decay:</strong> 0.01 (10× lower)</li>
+                    <li><strong>Schedule:</strong> 5% warmup + cosine decay</li>
+                    <li><strong>Loss Masking:</strong> Only assistant responses contribute to loss (user input masked
+                        with -100)
+                    </li>
+                </ul>
 
-        <h2 id="metrics">7. Training Metrics & Analysis</h2>
+                <h2 id="metrics">7. Training Metrics & Analysis</h2>
 
-        <div class="figure">
-            <img src="figures/training_report.png" alt="Training Metrics">
-            <p class="figure-caption">
-                Figure 1: Training dynamics across pretraining (4 curriculum stages) and supervised fine-tuning.
-                The top panel shows cross-entropy loss progression, while the bottom panel displays the learning rate
-                schedule.
-            </p>
-        </div>
+                <div class="figure">
+                    <img src="figures/training_report.png" alt="Training Metrics">
+                    <p class="figure-caption">
+                        Figure 1: Training dynamics across pretraining (4 curriculum stages) and supervised fine-tuning.
+                        The top panel shows cross-entropy loss progression, while the bottom panel displays the learning
+                        rate
+                        schedule.
+                    </p>
+                </div>
 
-        <h3>7.1 Loss Progression</h3>
-        <p>
-            The training loss curve reveals several important patterns:
-        </p>
-        <ul>
-            <li><strong>Stage 1 (0-8B tokens):</strong> Rapid loss decrease as the model learns basic language patterns.
-                The loss drops from ~10 to ~3.5, indicating the model is learning word predictions and simple syntax.
-            </li>
+                <h3>7.1 Loss Progression</h3>
+                <p>
+                    The training loss curve reveals several important patterns:
+                </p>
+                <ul>
+                    <li><strong>Stage 1 (0-8B tokens):</strong> Rapid loss decrease as the model learns basic language
+                        patterns.
+                        The loss drops from ~10 to ~3.5, indicating the model is learning word predictions and simple
+                        syntax.
+                    </li>
 
-            <li><strong>Stage 2 (8-14B tokens):</strong> Introduction of knowledge-heavy content (Cosmopedia) causes
-                a slight loss increase, followed by continued decrease. This "shock" is expected when adding new
-                domains.</li>
+                    <li><strong>Stage 2 (8-14B tokens):</strong> Introduction of knowledge-heavy content (Cosmopedia)
+                        causes
+                        a slight loss increase, followed by continued decrease. This "shock" is expected when adding new
+                        domains.</li>
 
-            <li><strong>Stage 3 (14-18B tokens):</strong> Math reasoning content initially increases difficulty,
-                shown by the loss plateau. The model adapts and continues improving as it learns mathematical patterns.
-            </li>
+                    <li><strong>Stage 3 (14-18B tokens):</strong> Math reasoning content initially increases difficulty,
+                        shown by the loss plateau. The model adapts and continues improving as it learns mathematical
+                        patterns.
+                    </li>
 
-            <li><strong>Stage 4 (18-20B tokens):</strong> Final specialization with highest concentration of expert
-                content. Loss continues decreasing, showing the model successfully integrates all knowledge.</li>
+                    <li><strong>Stage 4 (18-20B tokens):</strong> Final specialization with highest concentration of
+                        expert
+                        content. Loss continues decreasing, showing the model successfully integrates all knowledge.
+                    </li>
 
-            <li><strong>SFT Phase (20.0-20.1B tokens : stretched for visibility):</strong> Sharp initial loss decrease
-                as the model learns
-                conversational structure, followed by stable convergence around loss ~2.3. The SFT phase effectively
-                teaches the model to follow instructions without forgetting its pretraining knowledge.</li>
-        </ul>
+                    <li><strong>SFT Phase (20.0-20.1B tokens : stretched for visibility):</strong> Sharp initial loss
+                        decrease
+                        as the model learns
+                        conversational structure, followed by stable convergence around loss ~2.3. The SFT phase
+                        effectively
+                        teaches the model to follow instructions without forgetting its pretraining knowledge.</li>
+                </ul>
 
-        <h3>7.2 Learning Rate Strategy</h3>
-        <p>
-            The learning rate schedule is visualized in the bottom panel:
-        </p>
-        <ul>
-            <li><strong>Warmup (1B tokens):</strong> Gradual LR increase prevents early training instability</li>
-            <li><strong>Stable training (1B-13.5B):</strong> Constant LR maximizes learning during curriculum stages
-            </li>
-            <li><strong>Annealing (13.5B-20B):</strong> Cosine decay allows fine-grained optimization as loss plateaus
-            </li>
-            <li><strong>SFT warmup & decay:</strong> Conservative LR (1.5e-4 peak) prevents overfitting on chat data
-            </li>
-        </ul>
-        <p>
-            <em>Note:</em> Two discontinuities are visible in the learning rate schedule. The first results from an LR
-            reduction following training divergence: maintaining 3e-3 when introducing mathematical content (Stage 3)
-            caused instability, as the aggressive learning rate erased previously learned web and Cosmopedia knowledge.
-            The second discontinuity stems from adjusting the cosine decay target from 3e-4 to 3e-5 before SFT. Small
-            models like HilbertLM benefit from higher learning rates for broad exploration but require significant
-            reduction
-            during specialization phases to prevent catastrophic forgetting.
-        </p>
+                <h3>7.2 Learning Rate Strategy</h3>
+                <p>
+                    The learning rate schedule is visualized in the bottom panel:
+                </p>
+                <ul>
+                    <li><strong>Warmup (1B tokens):</strong> Gradual LR increase prevents early training instability
+                    </li>
+                    <li><strong>Stable training (1B-13.5B):</strong> Constant LR maximizes learning during curriculum
+                        stages
+                    </li>
+                    <li><strong>Annealing (13.5B-20B):</strong> Cosine decay allows fine-grained optimization as loss
+                        plateaus
+                    </li>
+                    <li><strong>SFT warmup & decay:</strong> Conservative LR (1.5e-4 peak) prevents overfitting on chat
+                        data
+                    </li>
+                </ul>
+                <p>
+                    <em>Note:</em> Two discontinuities are visible in the learning rate schedule. The first results from
+                    an LR
+                    reduction following training divergence: maintaining 3e-3 when introducing mathematical content
+                    (Stage 3)
+                    caused instability, as the aggressive learning rate erased previously learned web and Cosmopedia
+                    knowledge.
+                    The second discontinuity stems from adjusting the cosine decay target from 3e-4 to 3e-5 before SFT.
+                    Small
+                    models like HilbertLM benefit from higher learning rates for broad exploration but require
+                    significant
+                    reduction
+                    during specialization phases to prevent catastrophic forgetting.
+                </p>
 
-        <h3>7.3 Training Efficiency</h3>
-        <div class="metric-card">
-            <p><strong>Throughput Metrics:</strong></p>
-            <ul>
-                <li>~79,000 tokens/second on single RTX 5080 16GB</li>
-                <li>Effective batch size: 524,288 tokens</li>
-                <li>Gradient accumulation: 64 steps</li>
-                <li>Memory usage: ~11GB (BF16)</li>
-            </ul>
-        </div>
+                <h3>7.3 Training Efficiency</h3>
+                <div class="metric-card">
+                    <p><strong>Throughput Metrics:</strong></p>
+                    <ul>
+                        <li>~79,000 tokens/second on single RTX 5080 16GB</li>
+                        <li>Effective batch size: 524,288 tokens</li>
+                        <li>Gradient accumulation: 64 steps</li>
+                        <li>Memory usage: ~11GB (BF16)</li>
+                    </ul>
+                </div>
 
-        <h2 id="landscape">8. Loss Landscape Visualization</h2>
+                <h2 id="landscape">8. Loss Landscape Visualization</h2>
 
-        <div class="figure">
-            <img src="figures/curriculum_smooth_landscape.gif" alt="Loss Landscape Animation">
-            <p class="figure-caption">
-                Figure 2: Animated loss landscape showing the training trajectory projected onto the first two
-                principal components. The surface morphs between curriculum stages, revealing how data distribution
-                changes affect the optimization landscape.
-            </p>
-        </div>
+                <div class="figure">
+                    <img src="figures/curriculum_smooth_landscape.gif" alt="Loss Landscape Animation">
+                    <p class="figure-caption">
+                        Figure 2: Animated loss landscape showing the training trajectory projected onto the first two
+                        principal components. The surface morphs between curriculum stages, revealing how data
+                        distribution
+                        changes affect the optimization landscape.
+                    </p>
+                </div>
 
-        <h3>8.1 Visualization Methodology</h3>
-        <p>
-            To visualize how the model evolves during training, we perform a loss landscape analysis:
-        </p>
-        <ol>
-            <li><strong>Checkpoint Collection:</strong> 11 checkpoints saved during training (including SFT phase)</li>
+                <h3>8.1 Visualization Methodology</h3>
+                <p>
+                    To visualize how the model evolves during training, we perform a loss landscape analysis:
+                </p>
+                <ol>
+                    <li><strong>Checkpoint Collection:</strong> 11 checkpoints saved during training (including SFT
+                        phase)</li>
 
-            <li><strong>PCA Projection:</strong> All checkpoint weights are flattened and projected onto a 2D plane
-                using Principal Component Analysis. The first two principal components capture the main directions
-                of parameter movement.</li>
+                    <li><strong>PCA Projection:</strong> All checkpoint weights are flattened and projected onto a 2D
+                        plane
+                        using Principal Component Analysis. The first two principal components capture the main
+                        directions
+                        of parameter movement.</li>
 
-            <li><strong>Gram-Schmidt Orthogonalization:</strong> The two PCA directions are orthonormalized to create
-                perpendicular basis vectors $(\delta_1, \delta_2)$, ensuring accurate distance measurements.</li>
+                    <li><strong>Gram-Schmidt Orthogonalization:</strong> The two PCA directions are orthonormalized to
+                        create
+                        perpendicular basis vectors $(\delta_1, \delta_2)$, ensuring accurate distance measurements.
+                    </li>
 
-            <li><strong>Surface Evaluation:</strong> For each curriculum stage, we evaluate the loss on a validation
-                batch across a $25 \times 25$ grid around the final checkpoint ($\theta^*$). At each grid point:
-                $$\theta (\alpha, \beta) = \theta^* + \alpha \cdot \delta_1 + \beta \cdot \delta_2$$</li>
+                    <li><strong>Surface Evaluation:</strong> For each curriculum stage, we evaluate the loss on a
+                        validation
+                        batch across a $25 \times 25$ grid around the final checkpoint ($\theta^*$). At each grid point:
+                        $$\theta (\alpha, \beta) = \theta^* + \alpha \cdot \delta_1 + \beta \cdot \delta_2$$</li>
 
-            <li><strong>Animation:</strong> The visualization shows smooth morphing between stage-specific landscapes,
-                with training checkpoints marked as stars progressing along the trajectory.</li>
-        </ol>
+                    <li><strong>Animation:</strong> The visualization shows smooth morphing between stage-specific
+                        landscapes,
+                        with training checkpoints marked as stars progressing along the trajectory.</li>
+                </ol>
 
-        <h3>8.2 Key Observations</h3>
-        <p>
-            The loss landscape visualization reveals important training dynamics:
-        </p>
+                <h3>8.2 Key Observations</h3>
+                <p>
+                    The loss landscape visualization reveals important training dynamics:
+                </p>
 
-        <p><strong>Curriculum-Induced Landscape Changes:</strong></p>
-        <p>
-            Each curriculum stage exhibits a distinct loss surface. When transitioning to Stage 2 (adding Cosmopedia),
-            the landscape morphs to show new loss valleys. This confirms that each stage introduces unique optimization
-            challenges, justifying the curriculum approach.
-        </p>
+                <p><strong>Curriculum-Induced Landscape Changes:</strong></p>
+                <p>
+                    Each curriculum stage exhibits a distinct loss surface. When transitioning to Stage 2 (adding
+                    Cosmopedia),
+                    the landscape morphs to show new loss valleys. This confirms that each stage introduces unique
+                    optimization
+                    challenges, justifying the curriculum approach.
+                </p>
 
-        <p><strong>Progressive Optimization Path:</strong></p>
-        <p>
-            The training trajectory shows consistent movement toward lower loss regions.
-            Checkpoints cluster along smooth paths rather than erratic jumps, indicating stable training.
-        </p>
+                <p><strong>Progressive Optimization Path:</strong></p>
+                <p>
+                    The training trajectory shows consistent movement toward lower loss regions.
+                    Checkpoints cluster along smooth paths rather than erratic jumps, indicating stable training.
+                </p>
 
-        <p><strong>Stage Transitions:</strong></p>
-        <p>
-            When curriculum stages change, the loss surface morphs but the checkpoint position remains valid.
-            This smooth transition suggests that earlier learning transfers effectively to new domains, avoiding
-            catastrophic forgetting.
-        </p>
+                <p><strong>Stage Transitions:</strong></p>
+                <p>
+                    When curriculum stages change, the loss surface morphs but the checkpoint position remains valid.
+                    This smooth transition suggests that earlier learning transfers effectively to new domains, avoiding
+                    catastrophic forgetting.
+                </p>
 
-        <p><strong>SFT Landscape (Stage 5):</strong></p>
-        <p>
-            The SFT phase shows a different landscape shape, with sharper valleys corresponding to conversational
-            patterns. The final checkpoint sits in a well-optimized region, explaining the model's strong chat
-            performance.
-        </p>
+                <p><strong>SFT Landscape (Stage 5):</strong></p>
+                <p>
+                    The SFT phase shows a different landscape shape, with sharper valleys corresponding to
+                    conversational
+                    patterns. The final checkpoint sits in a well-optimized region, explaining the model's strong chat
+                    performance.
+                </p>
 
-        <p><strong>Loss Curvature:</strong></p>
-        <p>
-            Flatter regions around checkpoints indicate better generalization. The final model occupies a relatively
-            flat basin, suggesting robust performance across diverse inputs.
-        </p>
+                <p><strong>Loss Curvature:</strong></p>
+                <p>
+                    Flatter regions around checkpoints indicate better generalization. The final model occupies a
+                    relatively
+                    flat basin, suggesting robust performance across diverse inputs.
+                </p>
 
-        <h3>8.3 Comparison with Random Initialization</h3>
-        <p>
-            The visualization demonstrates why curriculum learning works: instead of navigating a single complex
-            landscape, the model traverses progressively refined landscapes. Each stage provides a step toward the final
-            objective, making optimization more tractable than training on the full mixture from scratch.
-        </p>
+                <h3>8.3 Comparison with Random Initialization</h3>
+                <p>
+                    The visualization demonstrates why curriculum learning works: instead of navigating a single complex
+                    landscape, the model traverses progressively refined landscapes. Each stage provides a step toward
+                    the final
+                    objective, making optimization more tractable than training on the full mixture from scratch.
+                </p>
 
-        <h2 id="results">9. Results & Capabilities</h2>
+                <h2 id="results">9. Results & Capabilities</h2>
 
-        <h3>9.1 Qualitative Performance</h3>
-        <p>
-            The final HilbertLM model demonstrates several capabilities:
-        </p>
-        <ul>
-            <li><strong>Code Generation:</strong> Can write simple Python functions with correct syntax.</li>
-            <li><strong>Mathematical Reasoning:</strong> Can explain mathematical concepts and provide formulas.</li>
-            <li><strong>Conversational Ability:</strong> Maintains context (with some limitations) across multiple chat
-                formats (up to 3 turns), and generates well-structured sentences.</li>
-            <li><strong>Knowledge Retrieval:</strong> Accesses learned facts from Cosmopedia and FineWeb-Edu.</li>
-        </ul>
+                <h3>9.1 Qualitative Performance</h3>
+                <p>
+                    The final HilbertLM model demonstrates several capabilities:
+                </p>
+                <ul>
+                    <li><strong>Code Generation:</strong> Can write simple Python functions with correct syntax.</li>
+                    <li><strong>Mathematical Reasoning:</strong> Can explain mathematical concepts and provide formulas.
+                    </li>
+                    <li><strong>Conversational Ability:</strong> Maintains context (with some limitations) across
+                        multiple chat
+                        formats (up to 3 turns), and generates well-structured sentences.</li>
+                    <li><strong>Knowledge Retrieval:</strong> Accesses learned facts from Cosmopedia and FineWeb-Edu.
+                    </li>
+                </ul>
 
-        <h3>9.2 Limitations</h3>
-        <p>
-            As a 135M parameter model trained on 20B tokens, HilbertLM has expected limitations:
-        </p>
-        <ul>
-            <li>Limited factual knowledge compared to larger models.</li>
-            <li>Struggles with complex multi-step reasoning.</li>
-            <li>English-only (the tokenizer was trained on an English corpus).</li>
-            <li>Produces shorter coherent generations, occasional repetitions, and sentences that are sometimes not
-                properly terminated.</li>
-        </ul>
-        <p>
-            <em>Note:</em> To address the issues of shorter coherent generations and improperly terminated sentences, we
-            use a semantic judge (TinyBERT-L2-v2 from Microsoft) to ensure the generated sentences respond to user
-            requests properly and stop when appropriate.
-        </p>
+                <h3>9.2 Limitations</h3>
+                <p>
+                    As a 135M parameter model trained on 20B tokens, HilbertLM has expected limitations:
+                </p>
+                <ul>
+                    <li>Limited factual knowledge compared to larger models.</li>
+                    <li>Struggles with complex multi-step reasoning.</li>
+                    <li>English-only (the tokenizer was trained on an English corpus).</li>
+                    <li>Produces shorter coherent generations, occasional repetitions, and sentences that are sometimes
+                        not
+                        properly terminated.</li>
+                </ul>
+                <p>
+                    <em>Note:</em> To address the issues of shorter coherent generations and improperly terminated
+                    sentences, we
+                    use a semantic judge (TinyBERT-L2-v2 from Microsoft) to ensure the generated sentences respond to
+                    user
+                    requests properly and stop when appropriate.
+                </p>
 
-        <h3>9.3 Interactive Demo</h3>
-        <p>
-            Try the model yourself in the <a href="chat/">interactive chat demo</a>. The interface supports:
-        </p>
-        <ul>
-            <li>Streaming text generation with real-time output</li>
-            <li>Markdown rendering for formatted responses</li>
-            <li>LaTeX math rendering using KaTeX</li>
-            <li>Code syntax highlighting</li>
-            <li>Multi-turn conversation history (last 3 messages)</li>
-        </ul>
+                <h3>9.3 Interactive Demo</h3>
+                <p>
+                    Try the model yourself in the <a href="chat/">interactive chat demo</a>. The interface supports:
+                </p>
+                <ul>
+                    <li>Streaming text generation with real-time output</li>
+                    <li>Markdown rendering for formatted responses</li>
+                    <li>LaTeX math rendering using KaTeX</li>
+                    <li>Code syntax highlighting</li>
+                    <li>Multi-turn conversation history (last 3 messages)</li>
+                </ul>
 
-        <h2 id="conclusion">10. Conclusion</h2>
+                <h2 id="conclusion">10. Conclusion</h2>
 
-        <p>
-            HilbertLM demonstrates that it's possible to train a capable language model from scratch with modest
-            resources (single GPU, ~70 hours). The key insights from this project are:
-        </p>
+                <p>
+                    HilbertLM demonstrates that it's possible to train a capable language model from scratch with modest
+                    resources (single GPU, ~70 hours). The key insights from this project are:
+                </p>
 
-        <ol>
-            <li><strong>Curriculum Learning:</strong> Progressive data mixing consistently outperforms
-                training on the full mixture from the start. The loss landscape visualization confirms this empirically.
-            </li>
+                <ol>
+                    <li><strong>Curriculum Learning:</strong> Progressive data mixing consistently outperforms
+                        training on the full mixture from the start. The loss landscape visualization confirms this
+                        empirically.
+                    </li>
 
-            <li><strong>Training Dynamics and Data Quality:</strong> Rather than strictly adhering to Chinchilla scaling
-                laws, the model is intentionally trained beyond compute-optimal limits on high-quality data. Up to the
-                first checkpoint, every token is crucial and sharply improves model accuracy. Beyond that point, each
-                additional training phase equivalent to a "Chinchilla length" yields only marginal improvements.
-            </li>
+                    <li><strong>Training Dynamics and Data Quality:</strong> Rather than strictly adhering to Chinchilla
+                        scaling
+                        laws, the model is intentionally trained beyond compute-optimal limits on high-quality data. Up
+                        to the
+                        first checkpoint, every token is crucial and sharply improves model accuracy. Beyond that point,
+                        each
+                        additional training phase equivalent to a "Chinchilla length" yields only marginal improvements.
+                    </li>
 
-            <li><strong>Architecture Choices Matter:</strong> Modern techniques (GQA, RoPE, SwiGLU) significantly
-                improve efficiency and quality compared to vanilla transformers.</li>
+                    <li><strong>Architecture Choices Matter:</strong> Modern techniques (GQA, RoPE, SwiGLU)
+                        significantly
+                        improve efficiency and quality compared to vanilla transformers.</li>
 
-            <li><strong>SFT:</strong> The base model has knowledge but needs instruction-tuning to
-                become conversational. 100M SFT tokens transforms the model into a functional assistant.</li>
+                    <li><strong>SFT:</strong> The base model has knowledge but needs instruction-tuning to
+                        become conversational. 100M SFT tokens transforms the model into a functional assistant.</li>
 
-            <li><strong>Visualization Provides Insights:</strong> Loss landscape analysis reveals optimization dynamics
-                that guide architecture and training decisions.</li>
-        </ol>
+                    <li><strong>Visualization Provides Insights:</strong> Loss landscape analysis reveals optimization
+                        dynamics
+                        that guide architecture and training decisions.</li>
+                </ol>
 
-        <p>
-            This project serves as a complete educational resource for understanding modern LLM training, from
-            tokenization to deployment. It proves that the core principles
-            of large language models are accessible to individual researchers and students.
-        </p>
+                <p>
+                    This project serves as a complete educational resource for understanding modern LLM training, from
+                    tokenization to deployment. It proves that the core principles
+                    of large language models are accessible to individual researchers and students.
+                </p>
 
-        <h2 id="references">11. References</h2>
+                <h2 id="references">11. References</h2>
 
-        <ol>
-            <li id="ref1">
-                Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., & Polosukhin,
-                I. (2017).
-                <strong>Attention Is All You Need.</strong>
-                <em>Advances in Neural Information Processing Systems 30 (NIPS 2017)</em>.
-                <a href="https://arxiv.org/abs/1706.03762" target="_blank">https://arxiv.org/abs/1706.03762</a>
-            </li>
-            <li id="ref2">
-                Ben Allal, L., Lozhkov, A., Bakouch, E., Martín Blázquez, G., Penedo, G., Tunstall, L., Marafioti, A.,
-                Kydlíček, H., Piqueres Lajarín, A., Srivastav, V., Lochner, J., Fahlgren, C., Nguyen, X.-S., Fourrier,
-                C., Burtenshaw, B., Larcher, H., Zhao, H., Zakka, C., Morlon, M., Raffel, C., von Werra, L., & Wolf, T.
-                (2025).
-                <strong>SmolLM2: When Smol Goes Big -- Data-Centric Training of a Small Language Model.</strong>
-                <em>arXiv preprint arXiv:2502.02737</em>.
-                <a href="https://arxiv.org/abs/2502.02737" target="_blank">https://arxiv.org/abs/2502.02737</a>
-            </li>
-            <li id="ref3">
-                Ainslie, J., Lee-Thorp, J., de Jong, M., Zemlyanskiy, Y., Lebrón, F., & Sanghai, S. (2023).
-                <strong>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints.</strong>
-                <em>arXiv preprint arXiv:2305.13245</em>.
-                <a href="https://arxiv.org/abs/2305.13245" target="_blank">https://arxiv.org/abs/2305.13245</a>
-            </li>
-            <li id="ref4">
-                Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., & Liu, Y. (2021).
-                <strong>RoFormer: Enhanced Transformer with Rotary Position Embedding.</strong>
-                <em>arXiv preprint arXiv:2104.09864</em>.
-                <a href="https://arxiv.org/abs/2104.09864" target="_blank">https://arxiv.org/abs/2104.09864</a>
-            </li>
-            <li id="ref5">
-                Shazeer, N. (2020).
-                <strong>GLU Variants Improve Transformer.</strong>
-                <em>arXiv preprint arXiv:2002.05202</em>.
-                <a href="https://arxiv.org/abs/2002.05202" target="_blank">https://arxiv.org/abs/2002.05202</a>
-            </li>
-            <li id="ref6">
-                Zhang, B., & Sennrich, R. (2019).
-                <strong>Root Mean Square Layer Normalization.</strong>
-                <em>Advances in Neural Information Processing Systems 32</em>.
-                <a href="https://arxiv.org/abs/1910.07467" target="_blank">https://arxiv.org/abs/1910.07467</a>
-            </li>
-            <li id="ref7">
-                Loshchilov, I., & Hutter, F. (2017).
-                <strong>Decoupled Weight Decay Regularization.</strong>
-                <em>International Conference on Learning Representations</em>.
-                <a href="https://arxiv.org/abs/1711.05101" target="_blank">https://arxiv.org/abs/1711.05101</a>
-            </li>
-            <li id="ref8">
-                Hoffmann, J., Borgeaud, S., Mensch, A., et al. (2022).
-                <strong>Training Compute-Optimal Large Language Models.</strong>
-                <em>arXiv preprint arXiv:2203.15556</em>.
-                <a href="https://arxiv.org/abs/2203.15556" target="_blank">https://arxiv.org/abs/2203.15556</a>
-            </li>
-        </ol>
+                <ol>
+                    <li id="ref1">
+                        Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &
+                        Polosukhin,
+                        I. (2017).
+                        <strong>Attention Is All You Need.</strong>
+                        <em>Advances in Neural Information Processing Systems 30 (NIPS 2017)</em>.
+                        <a href="https://arxiv.org/abs/1706.03762" target="_blank">https://arxiv.org/abs/1706.03762</a>
+                    </li>
+                    <li id="ref2">
+                        Ben Allal, L., Lozhkov, A., Bakouch, E., Martín Blázquez, G., Penedo, G., Tunstall, L.,
+                        Marafioti, A.,
+                        Kydlíček, H., Piqueres Lajarín, A., Srivastav, V., Lochner, J., Fahlgren, C., Nguyen, X.-S.,
+                        Fourrier,
+                        C., Burtenshaw, B., Larcher, H., Zhao, H., Zakka, C., Morlon, M., Raffel, C., von Werra, L., &
+                        Wolf, T.
+                        (2025).
+                        <strong>SmolLM2: When Smol Goes Big -- Data-Centric Training of a Small Language Model.</strong>
+                        <em>arXiv preprint arXiv:2502.02737</em>.
+                        <a href="https://arxiv.org/abs/2502.02737" target="_blank">https://arxiv.org/abs/2502.02737</a>
+                    </li>
+                    <li id="ref3">
+                        Ainslie, J., Lee-Thorp, J., de Jong, M., Zemlyanskiy, Y., Lebrón, F., & Sanghai, S. (2023).
+                        <strong>GQA: Training Generalized Multi-Query Transformer Models from Multi-Head
+                            Checkpoints.</strong>
+                        <em>arXiv preprint arXiv:2305.13245</em>.
+                        <a href="https://arxiv.org/abs/2305.13245" target="_blank">https://arxiv.org/abs/2305.13245</a>
+                    </li>
+                    <li id="ref4">
+                        Su, J., Lu, Y., Pan, S., Murtadha, A., Wen, B., & Liu, Y. (2021).
+                        <strong>RoFormer: Enhanced Transformer with Rotary Position Embedding.</strong>
+                        <em>arXiv preprint arXiv:2104.09864</em>.
+                        <a href="https://arxiv.org/abs/2104.09864" target="_blank">https://arxiv.org/abs/2104.09864</a>
+                    </li>
+                    <li id="ref5">
+                        Shazeer, N. (2020).
+                        <strong>GLU Variants Improve Transformer.</strong>
+                        <em>arXiv preprint arXiv:2002.05202</em>.
+                        <a href="https://arxiv.org/abs/2002.05202" target="_blank">https://arxiv.org/abs/2002.05202</a>
+                    </li>
+                    <li id="ref6">
+                        Zhang, B., & Sennrich, R. (2019).
+                        <strong>Root Mean Square Layer Normalization.</strong>
+                        <em>Advances in Neural Information Processing Systems 32</em>.
+                        <a href="https://arxiv.org/abs/1910.07467" target="_blank">https://arxiv.org/abs/1910.07467</a>
+                    </li>
+                    <li id="ref7">
+                        Loshchilov, I., & Hutter, F. (2017).
+                        <strong>Decoupled Weight Decay Regularization.</strong>
+                        <em>International Conference on Learning Representations</em>.
+                        <a href="https://arxiv.org/abs/1711.05101" target="_blank">https://arxiv.org/abs/1711.05101</a>
+                    </li>
+                    <li id="ref8">
+                        Hoffmann, J., Borgeaud, S., Mensch, A., et al. (2022).
+                        <strong>Training Compute-Optimal Large Language Models.</strong>
+                        <em>arXiv preprint arXiv:2203.15556</em>.
+                        <a href="https://arxiv.org/abs/2203.15556" target="_blank">https://arxiv.org/abs/2203.15556</a>
+                    </li>
+                </ol>
 
-        <div style="text-align: center; margin: 60px 0 40px 0;">
-            <a href="chat/" class="btn-demo">Try HilbertLM Now</a>
-        </div>
+                <div style="text-align: center; margin: 60px 0 40px 0;">
+                    <a href="chat/" class="btn-demo">Try HilbertLM Now</a>
+                </div>
 
-        <div style="text-align: center; color: #666; padding: 20px; border-top: 1px solid #eee; margin-top: 40px;">
-            <p>HilbertLM Project - Demonstrating modern language model training from scratch</p>
-            <p style="font-size: 0.9rem;">Built with PyTorch and HuggingFace Datasets</p>
-        </div>
+                <div
+                    style="text-align: center; color: #666; padding: 20px; border-top: 1px solid #eee; margin-top: 40px;">
+                    <p>HilbertLM Project - Demonstrating modern language model training from scratch</p>
+                    <p style="font-size: 0.9rem;">Built with PyTorch and HuggingFace Datasets</p>
+                </div>
     </div>
 
 </body>

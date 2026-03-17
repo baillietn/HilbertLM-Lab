@@ -31,7 +31,7 @@ HilbertLM is a complete educational project demonstrating how to build a modern 
 
 ```bash
 # Clone the repository
-git clone https://github.com/Nico77310/HilbertLM.git
+git clone https://github.com/Nico77310/HilbertLM-Lab.git
 cd HilbertLM
 
 # Install PyTorch (adjust for your CUDA version)
