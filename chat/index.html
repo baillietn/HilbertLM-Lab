@@ -36,6 +36,7 @@
             --input-text: #202124;
             --input-border: #e0e0e0;
             --send-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --stop-bg: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
             --status-color: #ffffff;
         }
 
@@ -362,23 +363,24 @@
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --page-gradient: linear-gradient(135deg, #13233e 0%, #2a1d42 100%);
-                --surface: #111827;
-                --surface-soft: #0f1726;
+                --page-gradient: linear-gradient(135deg, #0f1b2e 0%, #261a3d 100%);
+                --surface: #101724;
+                --surface-soft: #0d1522;
                 --text-main: #e5e7eb;
-                --text-muted: #a5b0c0;
-                --border-soft: #2c3950;
-                --border-card: #2a3650;
-                --bubble-user: linear-gradient(135deg, #304286 0%, #432d66 100%);
+                --text-muted: #a4afc0;
+                --border-soft: #27364e;
+                --border-card: #26334b;
+                --bubble-user: linear-gradient(135deg, #2d3f7a 0%, #3f2a63 100%);
                 --bubble-user-text: #f8fafc;
-                --bubble-assistant-avatar: linear-gradient(135deg, #9c4da6 0%, #8f3350 100%);
-                --bubble-assistant: #111c2f;
+                --bubble-assistant-avatar: linear-gradient(135deg, #7a3f87 0%, #6f2d47 100%);
+                --bubble-assistant: #111a2b;
                 --bubble-assistant-text: #dde5f3;
                 --inline-code-bg: rgba(255, 255, 255, 0.08);
-                --input-bg: #0f1726;
+                --input-bg: #0d1522;
                 --input-text: #e5e7eb;
-                --input-border: #34435f;
-                --send-bg: linear-gradient(135deg, #304286 0%, #432d66 100%);
+                --input-border: #30405b;
+                --send-bg: linear-gradient(135deg, #2d3f7a 0%, #3f2a63 100%);
+                --stop-bg: linear-gradient(135deg, #8d2e4e 0%, #6f3b7f 100%);
                 --status-color: #dbe4f4;
             }
 
@@ -487,7 +489,7 @@
 
             isGenerating = true;
             sendButton.textContent = 'Stop';
-            sendButton.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)';
+            sendButton.style.background = 'var(--stop-bg)';
             userInput.disabled = true;
 
             const userNodes = addMessage('user', message);
