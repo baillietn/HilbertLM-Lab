@@ -1,6 +1,7 @@
-# 🤖 HilbertLM
+![Logo HilbertLM](figures/poster.png)
+# HilbertLM
 
-A **135M parameter language model** trained from scratch with PyTorch on 20 billion tokens
+A **small language model** trained from scratch with PyTorch on 20 billion tokens
 
 ---
 
@@ -15,8 +16,89 @@ HilbertLM is a complete educational project demonstrating how to build a modern 
 - Loss landscape visualization
 - Interactive web demo
 
-**Home Page:** [HilbertLM](https://nico77310.github.io/HilbertLM/)
-**Chat Page:** [HilbertLM Chat](https://nico77310.github.io/HilbertLM/chat/)
+**Home Page:** [HilbertLM](https://baillietn.github.io/HilbertLM-Lab/)
+**Chat Page:** [HilbertLM Chat](https://baillietn.github.io/HilbertLM-Lab/chat/)
+
+---
+
+## Hugging Face Deployment 
+
+HilbertLM is available on Hugging Face Hub and can be used directly with `transformers`.
+
+### Available models
+
+- `baillietn/Hilbert-135M-Base`: Base model (BF16)
+- `baillietn/Hilbert-135M-Chat`: Chat fine-tuned model (BF16)
+- `baillietn/Hilbert-163M-Base-FP8`: Base model (FP8 training)
+- `baillietn/Hilbert-163M-Chat-FP8`: Chat fine-tuned model (FP8 training)
+
+Collection:
+[https://huggingface.co/collections/baillietn/hilbertlm](https://huggingface.co/collections/baillietn/hilbertlm)
+
+### Quick install
+
+```bash
+pip install torch transformers
+```
+
+### Load a model
+
+```python
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+model_path = "baillietn/Hilbert-135M-Base"
+
+tokenizer = AutoTokenizer.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(
+	model_path,
+	trust_remote_code=True,
+	torch_dtype=torch.bfloat16,
+)
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model = model.to(device)
+```
+
+### Inference example
+
+```python
+import torch
+from transformers import pipeline, set_seed
+
+prompt = "The most important invention was"
+
+generator = pipeline(
+	"text-generation",
+	model="baillietn/Hilbert-135M-Base",
+	trust_remote_code=True,
+	torch_dtype=torch.bfloat16,
+	device="cuda" if torch.cuda.is_available() else "cpu",
+)
+
+set_seed(37)
+
+outputs = generator(
+	prompt,
+	max_new_tokens=10,
+	num_return_sequences=3,
+	do_sample=True,
+	temperature=0.8,
+	top_p=0.9,
+	top_k=50,
+	repetition_penalty=1.0,
+	return_full_text=True,
+	eos_token_id=2,
+)
+
+print(outputs)
+```
+
+```bash
+[{'generated_text': 'The most important invention was the invention of the telegraph, which made possible the'}, 
+{'generated_text': 'The most important invention was the electric motor, which had the power to accelerate'}, 
+{'generated_text': 'The most important invention was the screwdriver. The screwdriver was used to'}]
+```
 
 ---
 
@@ -32,7 +114,7 @@ HilbertLM is a complete educational project demonstrating how to build a modern 
 ```bash
 # Clone the repository
 git clone https://github.com/Nico77310/HilbertLM-Lab.git
-cd HilbertLM
+cd HilbertLM-Lab
 
 # Install PyTorch (adjust for your CUDA version)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
@@ -131,7 +213,7 @@ python src/train.py --micro-batch-size 4    # Effective batch = batch_size / mic
 
 ## Documentation
 
-- **Technical Report:** [HilbertLM](https://nico77310.github.io/HilbertLM/) — Complete architecture, training methodology, loss landscape analysis
+- **Technical Report:** [HilbertLM]((https://baillietn.github.io/HilbertLM-Lab/) — Complete architecture, training methodology, loss landscape analysis
 - **Config File:** [`src/config.py`](src/config.py) — Adjust hyperparameters here
 
 
