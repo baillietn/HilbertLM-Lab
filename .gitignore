@@ -6,6 +6,7 @@ checkpoints_bf16/
 checkpoints_fp8/
 
 .venv/*
+.vscode/*
 
 src/__pycache__
 src/convert_to_hf/__pycache__
